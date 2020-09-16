@@ -4,20 +4,24 @@
   "description": "An art portfolio website utilising express.js and vue.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/denBot/kannea-web.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "denBot",
+  "license": "GNU",
   "bugs": {
     "url": "https://github.com/denBot/kannea-web/issues"
   },
   "homepage": "https://github.com/denBot/kannea-web#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
