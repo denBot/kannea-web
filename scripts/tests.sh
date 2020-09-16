@@ -2,6 +2,8 @@
 
 echo "Running pre-push hook"
 
+npm run eslint
+
 # $? stores exit value of the last command
 if [ $? -ne 0 ]; then
  echo "Test failed, push aborted. Pass tests for successful push."; exit 1
