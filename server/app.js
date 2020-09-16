@@ -8,6 +8,11 @@ const cors = require('cors');
 const app = express();
 const connectDB = require('./database');
 
+if (process.env.NODE_ENV === 'development') {
+    const morgan = require('morgan');
+    app.use(morgan('dev'));
+}
+
 connectDB();
 
 app.use(express.json());
