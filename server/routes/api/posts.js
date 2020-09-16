@@ -17,6 +17,9 @@ router.route('/:postid')
     })
     .put((res, req) => {
         res.send("Update Post: " + req.params.postid);
+    })
+    .delete((res, req) => {
+        res.send("Delete Post: " + req.params.postid);
     });
 
 module.exports = router;
