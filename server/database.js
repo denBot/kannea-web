@@ -1,3 +1,5 @@
+"use strict";
+
 const mongoose = require('mongoose');
 
 const dbName = process.env.DB_NAME;
