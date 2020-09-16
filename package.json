@@ -4,8 +4,8 @@
   "description": "An art portfolio website utilising express.js and vue.js",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
