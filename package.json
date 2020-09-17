@@ -23,6 +23,8 @@
     "@admin-bro/express": "^3.0.0",
     "@admin-bro/mongoose": "^1.0.0",
     "admin-bro": "^3.2.5",
+    "argon2": "^0.27.0",
+    "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -30,7 +32,8 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.1",
-    "mongoose": "^5.10.5"
+    "mongoose": "^5.10.5",
+    "mv": "^2.1.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

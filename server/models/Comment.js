@@ -3,30 +3,31 @@ const { Schema, model } = require('mongoose');
 const schemaOptions = {
     timestamps: {
         createdAt: 'created_at',
+        updatedAt: 'updated_at'
     },
 };
 
-const userSchema = new Schema({
-    firstname: String,
-    surname: String,
-    avatarLocation: {
-        type: String
+const commentSchema = new Schema({
+    name: {
+        type: String,
+        required: true
     },
     email: {
         type: String,
         required: true
     },
-    encryptedPassword: {
+    content: {
         type: String,
         required: true
     },
-    role: {
-        type: String,
-        enum: ['admin', 'moderator'],
-        required: true
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
     },
+
 }, schemaOptions);
 
-const User = model('Users', userSchema);
+const Comment = model('Comments', commentSchema);
 
-module.exports = User;
+module.exports = Comment;

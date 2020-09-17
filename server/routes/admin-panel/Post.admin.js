@@ -1,6 +1,6 @@
-const Post = require('../../../models/Post');
+const Post = require('../../models/Post');
 
-const PostResource = {
+module.exports = {
     resource: Post,
     options: {
         parent: {
@@ -9,5 +9,3 @@ const PostResource = {
         }
     }
 }
-
-module.exports = PostResource;

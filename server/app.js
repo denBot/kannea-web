@@ -13,6 +13,10 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 
+// Static directories
+app.use(express.static('frontend/dist'))
+app.use('/media', express.static('server/media'))
+
 // Development
 if (process.env.NODE_ENV === 'development') {
     const morgan = require('morgan');
@@ -21,7 +25,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/', require('./routes/index'));
-app.use('/admin', require('./routes/admin/index'));
+app.use('/admin', require('./routes/admin-panel/admin'));
 app.use('/api/posts', require('./routes/api/posts'));
 
 app.listen(PORT, () => {
