@@ -11,7 +11,7 @@ const connectDB = async () => {
     const uri = `mongodb+srv://${dbUser}:${dbPass}@${dbAddr}/${dbName}?retryWrites=true&w=majority`;
 
     try {
-        const conn = await mongoose.connect(uri, {
+        await mongoose.connect(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false

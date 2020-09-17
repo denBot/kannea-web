@@ -21,8 +21,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/', require('./routes/index'));
+app.use('/admin', require('./routes/admin/index'));
 app.use('/api/posts', require('./routes/api/posts'));
-
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`);
