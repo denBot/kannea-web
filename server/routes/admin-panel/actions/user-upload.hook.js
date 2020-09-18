@@ -29,14 +29,16 @@ const before = async (request, context) => {
 
         const { uploadImage, avatarUrl, ...otherParams } = request.payload;
 
-        if (!avatarUrl && !uploadImage) {
-            // If no URL or upload image is provided, get the default avatar from dicebear
-            await context.record.update({
-                avatarUrl: `https://avatars.dicebear.com/api/identicon/${context.record.params['_id']}.svg`
-            });
-        } else if (avatarUrl && !uploadImage && isImageUrl(avatarUrl)) {
-            // If new URL but no upload image is provided, set avatar to URL
-            await context.record.update({ avatarUrl });
+        if (context.record && context.record.isValid()) {
+            if (!avatarUrl && !uploadImage) {
+                // If no URL or upload image is provided, get the default avatar from dicebear
+                await context.record.update({
+                    avatarUrl: `https://avatars.dicebear.com/api/identicon/${context.record.params['_id']}.svg`
+                });
+            } else if (avatarUrl && !uploadImage && isImageUrl(avatarUrl)) {
+                // If new URL but no upload image is provided, set avatar to URL
+                await context.record.update({ avatarUrl });
+            }
         }
 
         // eslint-disable-next-line no-param-reassign

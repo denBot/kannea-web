@@ -1,54 +1,88 @@
 const AdminBro = require('admin-bro');
 const User = require('../../models/User');
-
-const isAdmin = ({ currentAdmin }) => currentAdmin && currentAdmin.role === 'admin'
+const {
+    isAdmin,
+    isAdminOrUserOwner
+} = require('./permissions');
 
 const {
-    after: passwordAfterHook,
     before: passwordBeforeHook,
+    after: passwordAfterHook,
 } = require('./actions/user-password.hook');
 
 const {
-    after: uploadAfterHook,
     before: uploadBeforeHook,
+    after: uploadAfterHook,
 } = require('./actions/user-upload.hook');
 
 /** @type {AdminBro.ResourceOptions} */
 const options = {
     properties: {
-        encryptedPassword: {
-            isVisible: false,
-        },
-        email: {
-            type: 'email',
-            isVisible: {
-                list: true, edit: isAdmin, filter: true, show: true,
-            },
-        },
-        password: {
-            type: 'password',
-            isVisible: {
-                list: false, edit: isAdmin, filter: false, show: false,
-            },
-        },
-        avatarUrl: {
-            isVisible: {
-                list: false, edit: true, filter: false, show: true,
-            },
-        },
-        uploadImage: {
+        avatar: {
+            position: 0,
             components: {
                 edit: AdminBro.bundle('./components/avatar.edit.tsx'),
                 list: AdminBro.bundle('./components/avatar.list.tsx'),
             },
         },
+        avatarUrl: {
+            position: 1,
+            isVisible: {
+                list: false, edit: true, filter: false, show: true,
+            },
+        },
+        firstname: {
+            position: 2,
+            isVisible: {
+                list: true, edit: true, filter: true, show: true,
+            },
+        },
+        surname: {
+            position: 3,
+            isVisible: {
+                list: true, edit: true, filter: true, show: true,
+            },
+        },
+        role: {
+            position: 4,
+            isVisible: {
+                list: true, edit: true, filter: true, show: true,
+            },
+        },
+        email: {
+            type: 'email',
+            isVisible: {
+                list: true, edit: true, filter: true, show: true,
+            },
+            position: 5,
+        },
+        password: {
+            type: 'password',
+            position: 6,
+            isVisible: {
+                list: false, edit: true, filter: false, show: false,
+            },
+        },
+        createdAt: {
+            position: 7,
+            isVisible: {
+                list: true, edit: false, filter: true, show: true,
+            },
+        },
+        updatedAt: {
+            position: 8,
+            isVisible: {
+                list: true, edit: false, filter: true, show: true,
+            },
+        },
+        encryptedPassword: {
+            isVisible: false,
+        },
     },
-    listProperties: ['uploadImage', 'firstname', 'surname', 'email', 'role', 'created_at'],
-    editProperties: ['uploadImage', 'avatarUrl', 'firstname', 'surname', 'role', 'email', 'password'],
-    filterProperties: ['firstname', 'surname', '_id', 'role', 'email'],
 
     actions: {
         new: {
+            isAccessible: isAdmin,
             after: async (response, request, context) => {
                 const modifiedResponse = await passwordAfterHook(response, request, context);
                 return uploadAfterHook(modifiedResponse, request, context);
@@ -59,6 +93,7 @@ const options = {
             },
         },
         edit: {
+            isAccessible: isAdminOrUserOwner,
             after: async (response, request, context) => {
                 const modifiedResponse = await passwordAfterHook(response, request, context);
                 return uploadAfterHook(modifiedResponse, request, context);
@@ -68,9 +103,17 @@ const options = {
                 return uploadBeforeHook(modifiedRequest, context);
             },
         },
-        show: {
-            isVisible: false,
+        delete: {
+            isAccessible: isAdmin,
+            guard: 'Are you sure?',
         },
+        bulkDelete: {
+            isAccessible: isAdmin,
+            guard: 'Are you sure?'
+        },
+        show: {
+            isAccessible: isAdmin
+        }
     },
 };
 

@@ -2,12 +2,11 @@ const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
     timestamps: {
-        createdAt: 'created_at',
+        createdAt: 'createdAt',
     },
 };
 
 const userSchema = new Schema({
-    _id: Schema.ObjectId,
     firstname: String,
     surname: String,
     avatarUrl: {
@@ -23,7 +22,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'moderator'],
+        enum: ['admin', 'user'],
         required: true
     },
 }, schemaOptions);
