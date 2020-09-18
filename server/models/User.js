@@ -7,9 +7,10 @@ const schemaOptions = {
 };
 
 const userSchema = new Schema({
+    _id: Schema.ObjectId,
     firstname: String,
     surname: String,
-    avatarLocation: {
+    avatarUrl: {
         type: String
     },
     email: {

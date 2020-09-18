@@ -1,5 +1,7 @@
 const AdminBro = require('admin-bro');
-const Company = require('../../models/User');
+const User = require('../../models/User');
+
+const isAdmin = ({ currentAdmin }) => currentAdmin && currentAdmin.role === 'admin'
 
 const {
     after: passwordAfterHook,
@@ -17,24 +19,34 @@ const options = {
         encryptedPassword: {
             isVisible: false,
         },
+        email: {
+            type: 'email',
+            isVisible: {
+                list: true, edit: isAdmin, filter: true, show: true,
+            },
+        },
         password: {
             type: 'password',
             isVisible: {
-                list: false, edit: true, filter: false, show: false,
+                list: false, edit: isAdmin, filter: false, show: false,
             },
         },
-        avatarLocation: {
+        avatarUrl: {
             isVisible: {
-                list: false, edit: true, filter: false, show: false,
+                list: false, edit: true, filter: false, show: true,
             },
         },
         uploadImage: {
             components: {
-                edit: AdminBro.bundle('./components/image.edit.tsx'),
-                list: AdminBro.bundle('./components/image.list.tsx'),
+                edit: AdminBro.bundle('./components/avatar.edit.tsx'),
+                list: AdminBro.bundle('./components/avatar.list.tsx'),
             },
         },
     },
+    listProperties: ['uploadImage', 'firstname', 'surname', 'email', 'role', 'created_at'],
+    editProperties: ['uploadImage', 'avatarUrl', 'firstname', 'surname', 'role', 'email', 'password'],
+    filterProperties: ['firstname', 'surname', '_id', 'role', 'email'],
+
     actions: {
         new: {
             after: async (response, request, context) => {
@@ -64,5 +76,5 @@ const options = {
 
 module.exports = {
     options,
-    resource: Company,
+    resource: User,
 };

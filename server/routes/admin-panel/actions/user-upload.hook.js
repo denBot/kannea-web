@@ -1,33 +1,44 @@
-const path = require('path');
-const fs = require('fs');
+const { cloudinary } = require('../../../utils/cloudinary');
 const AdminBro = require('admin-bro');
-const mv = require('mv');
+const isImageUrl = require('is-image-url');
 
 /** @type {AdminBro.After<AdminBro.ActionResponse>} */
 const after = async (response, request, context) => {
     const { record, uploadImage } = context;
 
     if (record.isValid() && uploadImage) {
-        const destination = path.join('server/media/avatars', record.id().toString(), uploadImage.name);
-        const avatarLocation = path.join('media/avatars', record.id().toString(), uploadImage.name);
-        await fs.promises.mkdir(path.dirname(destination), { recursive: true });
-
-        mv(uploadImage.path, destination, function (err) {
-            if (err) {
-                console.error('File upload failed:', err);
-                throw err;
-            }
-        });
-
-        await record.update({ avatarLocation });
-    }
+        try {
+            const uploadedResponse = await cloudinary.uploader.upload(uploadImage.path, {
+                crop: 'fill',
+                width: 200,
+                height: 200,
+                public_id: `${process.env.CLOUDINARY_FOLDER}/avatars/${record.params['_id']}`
+            });
+            await record.update({ avatarUrl: uploadedResponse.secure_url });
+        } catch (err) {
+            console.error(err);
+            throw err();
+        }
+}
     return response;
 };
 
 /** @type {AdminBro.Before} */
 const before = async (request, context) => {
     if (request.method === 'post') {
-        const { uploadImage, ...otherParams } = request.payload;
+
+        const { uploadImage, avatarUrl, ...otherParams } = request.payload;
+        console.log(avatarUrl)
+
+        if (!avatarUrl && !uploadImage) {
+            // If no URL or upload image is provided, get the default avatar from dicebear
+            await context.record.update({
+                avatarUrl: `https://avatars.dicebear.com/api/identicon/${context.record.params['_id']}.svg`
+            });
+        } else if (avatarUrl && !uploadImage && isImageUrl(avatarUrl)) {
+            // If new URL but no upload image is provided, set avatar to URL
+            await context.record.update({ avatarUrl });
+        }
 
         // eslint-disable-next-line no-param-reassign
         context.uploadImage = uploadImage;

@@ -3,13 +3,10 @@ import { Box, BasePropertyProps } from 'admin-bro'
 
 const Edit: React.FC<BasePropertyProps> = (props) => {
     const { record } = props
-
-    const srcImg = record.params['avatarLocation']
+    const avatarUrl = record.params['avatarUrl'];
     return (
         <Box>
-            {srcImg ? (
-                <img src={`/${srcImg}`} width="70px" />
-            ) : ''}
+            {avatarUrl ? (<img src={avatarUrl} style={{borderRadius: '100%', width: 30}} />) : ''}
         </Box>
     )
 }
