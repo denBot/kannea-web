@@ -28,7 +28,6 @@ const before = async (request, context) => {
     if (request.method === 'post') {
 
         const { uploadImage, avatarUrl, ...otherParams } = request.payload;
-        console.log(avatarUrl)
 
         if (!avatarUrl && !uploadImage) {
             // If no URL or upload image is provided, get the default avatar from dicebear
