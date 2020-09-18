@@ -16,9 +16,13 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    userId: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User',
+    },
+    views: {
+        type: Number,
+        default: 0
     }
 }, schemaOptions);
 
