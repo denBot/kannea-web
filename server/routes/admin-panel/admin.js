@@ -13,13 +13,15 @@ const User = require('../../models/User');
 const AuthUser = require('./User.admin.js');
 const Post = require('./Post.admin.js');
 const Comment = require('./Comment.admin.js');
+const SocialMedia = require('../../models/SocialMedia');
 
 const adminBro = new AdminBro({
     databases: [mongoose],
     resources: [
         AuthUser,
         Post,
-        Comment
+        Comment,
+        SocialMedia
     ],
     rootPath: '/admin',
 })

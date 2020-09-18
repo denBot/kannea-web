@@ -3,13 +3,11 @@ const { Schema, model } = require('mongoose');
 const socialMediaSchema = new Schema({
     type: {
         type: String,
-        required: true
+        enum: ['discord', 'email', 'facebook', 'google-plus', 'instagram', 'pinterest', 'snapchat', 'tumblr', 'twitter', 'youtube'],
+        required: true,
+        unique: true
     },
     url: {
-        type: String,
-        required: true
-    },
-    icon: {
         type: String,
         required: true
     }
