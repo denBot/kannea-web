@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/app.js",
     "dev": "nodemon server/app.js",
-    "eslint": "./node_modules/.bin/eslint . --ext .js,.vue"
+    "eslint": "./node_modules/.bin/eslint . --ext .js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "@admin-bro/mongoose": "^1.0.0",
     "admin-bro": "^3.2.5",
     "argon2": "^0.27.0",
+    "babel-eslint": "^10.1.0",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.23.0",
     "connect-mongo": "^3.2.0",
