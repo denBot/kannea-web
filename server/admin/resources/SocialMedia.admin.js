@@ -1,14 +1,14 @@
-const Comment = require('../../models/Comment');
+const SocialMedia = require('../../models/SocialMedia');
 
 /** @type {AdminBro.ResourceOptions} */
 const options = {
     parent: {
-        name: 'Website Content',
+        name: 'Configuration',
         icon: 'Accessibility',
     },
 };
 
 module.exports = {
     options,
-    resource: Comment,
+    resource: SocialMedia,
 };

@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/', require('./routes/index'));
-app.use('/admin', require('./routes/admin-panel/admin'));
+app.use('/admin', require('./admin/index'));
 app.use('/api/posts', require('./routes/api/posts'));
 
 app.use(express.json({ limit: '50mb' }));

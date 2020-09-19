@@ -21,18 +21,9 @@ const options = {
             isVisible: {
                 list: false, edit: true, filter: false, show: true,
             },
-            custom: {
-                modules: {
-                    toolbar: [['bold', 'italic'], ['link', 'image']],
-                },
-            },
-        },
-        updatedAt: {
-            isVisible: {
-                list: true, edit: false, filter: true, show: true,
-            },
         },
         views: {
+            position: 3,
             isVisible: {
                 list: true, edit: false, filter: true, show: true,
             },
@@ -41,6 +32,16 @@ const options = {
             isVisible: {
                 list: true, edit: false, filter: true, show: true,
             },
+        },
+        updatedAt: {
+            isVisible: {
+                list: true, edit: false, filter: true, show: true,
+            },
+        },
+    },
+    actions: {
+        show: {
+            isAccessible: false,
         }
     },
 }

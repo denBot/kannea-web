@@ -3,17 +3,17 @@ const User = require('../../models/User');
 const {
     isAdmin,
     isAdminOrUserOwner
-} = require('./permissions');
+} = require('../permissions');
 
 const {
     before: passwordBeforeHook,
     after: passwordAfterHook,
-} = require('./actions/user-password.hook');
+} = require('../actions/user-password.hook');
 
 const {
     before: uploadBeforeHook,
     after: uploadAfterHook,
-} = require('./actions/user-upload.hook');
+} = require('../actions/user-upload.hook');
 
 /** @type {AdminBro.ResourceOptions} */
 const options = {
@@ -27,8 +27,8 @@ const options = {
         avatar: {
             position: 0,
             components: {
-                edit: AdminBro.bundle('./components/avatar.edit.tsx'),
-                list: AdminBro.bundle('./components/avatar.list.tsx'),
+                edit: AdminBro.bundle('../components/avatar.edit.tsx'),
+                list: AdminBro.bundle('../components/avatar.list.tsx'),
             },
         },
         avatarUrl: {

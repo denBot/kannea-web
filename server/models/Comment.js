@@ -2,8 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
     },
 };
 
@@ -22,10 +22,9 @@ const commentSchema = new Schema({
     },
     author: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Users',
         default: null
     },
-
 }, schemaOptions);
 
 const Comment = model('Comments', commentSchema);

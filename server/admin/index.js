@@ -9,11 +9,11 @@ const MongoStore = require('connect-mongo')(session);
 AdminBro.registerAdapter(AdminBroMongoose)
 
 // Models and Resources
-const User = require('../../models/User');
-const AuthUser = require('./User.admin.js');
-const Post = require('./Post.admin.js');
-const Comment = require('./Comment.admin.js');
-const SocialMedia = require('../../models/SocialMedia');
+const User = require('../models/User');
+const AuthUser = require('./resources/User.admin');
+const Post = require('./resources/Post.admin');
+const Comment = require('./resources/Comment.admin');
+const SocialMedia = require('./resources/SocialMedia.admin');
 
 const adminBro = new AdminBro({
     databases: [mongoose],

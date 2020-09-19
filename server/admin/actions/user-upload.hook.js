@@ -1,4 +1,4 @@
-const { cloudinary } = require('../../../utils/cloudinary');
+const { cloudinary } = require('../../utils/cloudinary');
 const AdminBro = require('admin-bro');
 const isImageUrl = require('is-image-url');
 
