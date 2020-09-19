@@ -17,6 +17,7 @@ const options = {
         },
         content: {
             type: 'richtext',
+            custom: {},
             position: 2,
             isVisible: {
                 list: false, edit: true, filter: false, show: true,

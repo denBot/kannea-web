@@ -21,11 +21,7 @@ const options = {
         },
         content: {
             type: 'richtext',
-            custom: {
-                modules: {
-                    toolbar: [['bold', 'italic'], ['link', 'image']],
-                },
-            },
+            custom: {},
             position: 2,
             isVisible: {
                 list: false, edit: true, filter: false, show: true,
