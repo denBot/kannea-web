@@ -12,15 +12,31 @@ const configSchema = new Schema({
         unique: true,
         immutable: true,
     },
+    websiteName: {
+        type: String,
+        required: true,
+        default: process.env.DEFAULT_WEBSITE_NAME
+    },
     contactEmail: {
         type: String,
-        required: true
+        required: true,
+        default: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL
+    },
+    faviconUrl: {
+        type: String,
+        required: true,
+        default: process.env.DEFAULT_WEBSITE_FAVICON
+    },
+    logoUrl: {
+        type: String,
+        required: true,
+        default: process.env.DEFAULT_WEBSITE_LOGO
     },
     closeComments: {
         type: Boolean,
         default: false,
         required: true
-    }
+    },
 }, schemaOptions);
 
 const SiteConfig = model('Site Config', configSchema);

@@ -27,8 +27,8 @@ const options = {
         avatar: {
             position: 0,
             components: {
-                edit: AdminBro.bundle('../components/avatar.edit.tsx'),
-                list: AdminBro.bundle('../components/avatar.list.tsx'),
+                edit: AdminBro.bundle('../components/upload/avatar.edit.tsx'),
+                list: AdminBro.bundle('../components/upload/avatar.list.tsx'),
             },
         },
         avatarUrl: {

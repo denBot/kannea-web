@@ -22,9 +22,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Routes
-app.use('/', require('./routes/index'));
-app.use('/admin', require('./admin/index'));
-app.use('/api/posts', require('./routes/api/posts'));
+(async function () {
+    app.use('/', require('./routes/index'));
+    app.use('/api/posts', require('./routes/api/posts'));
+    app.use('/admin', await require('./admin/index'));
+})();
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
