@@ -9,11 +9,13 @@ const MongoStore = require('connect-mongo')(session);
 AdminBro.registerAdapter(AdminBroMongoose)
 
 // Models and Resources
+
 const User = require('../models/User');
 const AuthUser = require('./resources/User.admin');
 const Post = require('./resources/Post.admin');
 const Comment = require('./resources/Comment.admin');
 const SocialMedia = require('./resources/SocialMedia.admin');
+const SiteConfig = require('./resources/SiteConfig.admin');
 
 const adminBro = new AdminBro({
     databases: [mongoose],
@@ -21,13 +23,14 @@ const adminBro = new AdminBro({
         AuthUser,
         Post,
         Comment,
-        SocialMedia
+        SocialMedia,
+        SiteConfig,
     ],
     rootPath: '/admin',
 })
 
 const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
-    cookieName: 'adminBroC',
+    cookieName: process.env.ADMINBRO_COOKIE_NAME,
     cookiePassword: process.env.ADMINBRO_COOKIE_PASSWORD,
     authenticate: async (email, password) => {
         const user = await User.findOne({email})

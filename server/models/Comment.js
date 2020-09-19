@@ -25,6 +25,11 @@ const commentSchema = new Schema({
         ref: 'Users',
         default: null
     },
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: 'Blog Posts',
+        required: true
+    },
 }, schemaOptions);
 
 const Comment = model('Comments', commentSchema);

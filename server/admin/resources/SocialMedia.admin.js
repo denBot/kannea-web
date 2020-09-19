@@ -6,6 +6,11 @@ const options = {
         name: 'Configuration',
         icon: 'Accessibility',
     },
+    properties: {
+        _id: {
+            isVisible: false,
+        },
+    },
 };
 
 module.exports = {

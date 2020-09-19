@@ -13,7 +13,7 @@ connectDB();
 
 // Static directories
 app.use(express.static('frontend/dist'))
-app.use('/media', express.static('server/media'))
+app.use('/static', express.static('server/static'))
 
 // Development
 if (process.env.NODE_ENV === 'development') {

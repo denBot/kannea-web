@@ -7,6 +7,9 @@ const options = {
         icon: 'Accessibility',
     },
     properties: {
+        _id: {
+            isVisible: false,
+        },
         title: {
             position: 0,
             isVisible: true,

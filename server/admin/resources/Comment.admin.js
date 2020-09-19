@@ -7,6 +7,9 @@ const options = {
         icon: 'Accessibility',
     },
     properties: {
+        _id: {
+            isVisible: false,
+        },
         name: {
             position: 0,
             isVisible: true,
@@ -15,14 +18,20 @@ const options = {
             position: 1,
             isVisible: true,
         },
+        post: {
+            position: 2,
+            isVisible: {
+                list: true, edit: true, filter: false, show: true,
+            },
+        },
         author: {
-            position: 1,
+            position: 3,
             isVisible: true,
         },
         content: {
             type: 'richtext',
             custom: {},
-            position: 2,
+            position: 4,
             isVisible: {
                 list: false, edit: true, filter: false, show: true,
             },
