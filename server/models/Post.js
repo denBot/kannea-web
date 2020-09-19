@@ -27,6 +27,6 @@ const postSchema = new Schema({
     }
 }, schemaOptions);
 
-const Post = model('Blog Posts', postSchema);
+const Post = model('Posts', postSchema);
 
 module.exports = Post;

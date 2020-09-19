@@ -1,7 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
-    collection: 'Site Config'
+    timestamps: {
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
+    },
 };
 
 const configSchema = new Schema({
@@ -39,6 +42,6 @@ const configSchema = new Schema({
     },
 }, schemaOptions);
 
-const SiteConfig = model('Site Config', configSchema);
+const SiteConfig = model('SiteConfig', configSchema);
 
 module.exports = SiteConfig;

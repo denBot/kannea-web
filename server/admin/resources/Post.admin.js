@@ -3,7 +3,7 @@ const Post = require('../../models/Post');
 /** @type {AdminBro.ResourceOptions} */
 const options = {
     parent: {
-        name: 'Website Content',
+        name: 'Site Content',
         icon: 'Accessibility',
     },
     properties: {

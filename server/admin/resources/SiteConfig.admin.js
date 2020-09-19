@@ -14,6 +14,14 @@ const options = {
         _immutable: {
             isVisible: false,
         },
+        createdAt: {
+            isVisible: false,
+        },
+        updatedAt: {
+            isVisible: {
+                list: true,
+            },
+        },
     },
     actions: {
         new: {
@@ -29,7 +37,7 @@ const options = {
             isAccessible: false,
         },
         delete: {
-            isAccessible: false,
+            isAccessible: true,
         },
         bulkDelete: {
             isAccessible: false,

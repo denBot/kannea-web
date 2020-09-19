@@ -13,6 +13,6 @@ const socialMediaSchema = new Schema({
     }
 });
 
-const socialMedia = model('Social Media', socialMediaSchema);
+const socialMedia = model('SocialMedia', socialMediaSchema);
 
 module.exports = socialMedia;

@@ -27,7 +27,7 @@ const commentSchema = new Schema({
     },
     post: {
         type: Schema.Types.ObjectId,
-        ref: 'Blog Posts',
+        ref: 'Posts',
         required: true
     },
 }, schemaOptions);

@@ -103,7 +103,7 @@ const options = {
             guard: 'Are you sure?'
         },
         show: {
-            isAccessible: isAdmin
+            isAccessible: false
         }
     },
 };

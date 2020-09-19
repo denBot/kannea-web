@@ -3,7 +3,7 @@ const Comment = require('../../models/Comment');
 /** @type {AdminBro.ResourceOptions} */
 const options = {
     parent: {
-        name: 'Website Content',
+        name: 'Site Content',
         icon: 'Accessibility',
     },
     properties: {
