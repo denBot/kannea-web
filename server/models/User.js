@@ -7,14 +7,17 @@ const schemaOptions = {
 };
 
 const userSchema = new Schema({
-    firstname: String,
-    surname: String,
+    title: {
+        type: String,
+        requried: true,
+    },
     avatarUrl: {
         type: String
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     encryptedPassword: {
         type: String,

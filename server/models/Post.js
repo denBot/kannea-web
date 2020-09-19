@@ -2,8 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     },
 };
 
@@ -12,13 +12,14 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    description: {
+    content: {
         type: String,
         required: true
     },
     author: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Users',
+        required: true
     },
     views: {
         type: Number,

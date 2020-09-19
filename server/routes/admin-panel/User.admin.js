@@ -18,6 +18,12 @@ const {
 /** @type {AdminBro.ResourceOptions} */
 const options = {
     properties: {
+        _id: {
+            isVisible: false,
+        },
+        encryptedPassword: {
+            isVisible: false,
+        },
         avatar: {
             position: 0,
             components: {
@@ -31,20 +37,8 @@ const options = {
                 list: false, edit: true, filter: false, show: true,
             },
         },
-        firstname: {
+        title: {
             position: 2,
-            isVisible: {
-                list: true, edit: true, filter: true, show: true,
-            },
-        },
-        surname: {
-            position: 3,
-            isVisible: {
-                list: true, edit: true, filter: true, show: true,
-            },
-        },
-        role: {
-            position: 4,
             isVisible: {
                 list: true, edit: true, filter: true, show: true,
             },
@@ -54,29 +48,26 @@ const options = {
             isVisible: {
                 list: true, edit: true, filter: true, show: true,
             },
-            position: 5,
+            position: 4,
         },
         password: {
             type: 'password',
-            position: 6,
+            position: 5,
             isVisible: {
                 list: false, edit: true, filter: false, show: false,
             },
         },
         createdAt: {
-            position: 7,
+            position: 6,
             isVisible: {
                 list: true, edit: false, filter: true, show: true,
             },
         },
         updatedAt: {
-            position: 8,
+            position: 7,
             isVisible: {
                 list: true, edit: false, filter: true, show: true,
             },
-        },
-        encryptedPassword: {
-            isVisible: false,
         },
     },
 
