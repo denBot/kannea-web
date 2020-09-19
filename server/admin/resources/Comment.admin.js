@@ -21,19 +21,25 @@ const options = {
         post: {
             position: 2,
             isVisible: {
-                list: true, edit: true, filter: false, show: true,
+                list: true, edit: true,
+            },
+        },
+        replyTo: {
+            position: 3,
+            isVisible: {
+                list: true, edit: true,
             },
         },
         author: {
-            position: 3,
+            position: 4,
             isVisible: true,
         },
         content: {
             type: 'richtext',
             custom: {},
-            position: 4,
+            position: 5,
             isVisible: {
-                list: false, edit: true, filter: false, show: true,
+                list: false, edit: true,
             },
         },
         updatedAt: {

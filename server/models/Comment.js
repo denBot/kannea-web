@@ -1,10 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
-    },
+    timestamps: true,
 };
 
 const commentSchema = new Schema({
@@ -29,6 +26,10 @@ const commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Posts',
         required: true
+    },
+    replyTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comments'
     },
 }, schemaOptions);
 

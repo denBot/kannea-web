@@ -1,10 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const schemaOptions = {
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    },
+    timestamps: true,
 };
 
 const postSchema = new Schema({
