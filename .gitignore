@@ -3,6 +3,7 @@
 node_modules
 /dist
 /media
+.adminbro
 
 # Env files
 .env
