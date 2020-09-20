@@ -2,6 +2,8 @@ const { truncateString } = require("../utils/utilities")
 const { JSDOM } = require("jsdom")
 const { Schema, model } = require("mongoose")
 
+const maxContentChars = process.env.POST_MAX_CONTENT_CHARS
+const maxTitleChars = process.env.POST_MAX_TITLE_CHARS
 const maxDescriptionChars = process.env.POST_MAX_DESCRIPTION_CHARS
 
 const schemaOptions = {
@@ -13,13 +15,19 @@ const postSchema = new Schema(
     title: {
       type: String,
       required: true,
+      min: 6,
+      max: maxTitleChars,
     },
     content: {
       type: String,
       required: true,
+      min: 6,
+      max: maxContentChars,
     },
     description: {
       type: String,
+      min: 6,
+      max: maxDescriptionChars,
     },
     author: {
       type: Schema.Types.ObjectId,
