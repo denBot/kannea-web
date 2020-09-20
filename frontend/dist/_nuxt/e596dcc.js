@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{193:function(t,e,n){"use strict";n.r(e);var c={},r=n(29),component=Object(r.a)(c,(function(){var t=this.$createElement;this._self._c;return this._m(0)}),[function(){var t=this.$createElement,e=this._self._c||t;return e("div",[e("h1",[this._v("posts")])])}],!1,null,"ac616496",null);e.default=component.exports}}]);
