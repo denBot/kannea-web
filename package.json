@@ -1,4 +1,8 @@
-{ "name": "kannea-web", "version": "1.0.0", "description": "An art portfolio website utilising express.js and vue.js", "main": "app.js",
+{
+  "name": "kannea-web",
+  "version": "1.0.0",
+  "description": "An art portfolio website utilising express.js and vue.js",
+  "main": "app.js",
   "scripts": {
     "nuxt-dev": "nuxt-ts",
     "nuxt-build": "nuxt-ts build",
@@ -39,6 +43,7 @@
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.1",
     "is-image-url": "^1.1.8",
+    "jsdom": "^16.4.0",
     "mongoose": "^5.10.5",
     "mv": "^2.1.1",
     "nuxt": "^2.14.5"
