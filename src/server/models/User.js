@@ -9,6 +9,8 @@ const userSchema = new Schema(
     title: {
       type: String,
       requried: true,
+      min: process.env.USER_MIN_TITLE_CHARS,
+      max: process.env.USER_MAX_TITLE_CHARS,
     },
     avatarUrl: {
       type: String,
@@ -17,6 +19,8 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      min: 6,
+      max: process.env.USER_MAX_EMAIL_CHARS,
     },
     encryptedPassword: {
       type: String,
