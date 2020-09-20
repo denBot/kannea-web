@@ -6,17 +6,23 @@ const schemaOptions = {
 
 const commentSchema = new Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
+      min: process.env.USER_MIN_TITLE_CHARS,
+      max: process.env.USER_MAX_TITLE_CHARS,
     },
     email: {
       type: String,
       required: true,
+      min: 6,
+      max: process.env.USER_MAX_EMAIL_CHARS,
     },
     content: {
       type: String,
       required: true,
+      min: 6,
+      max: process.env.COMMENT_MAX_CONTENT_CHARS,
     },
     author: {
       type: Schema.Types.ObjectId,
