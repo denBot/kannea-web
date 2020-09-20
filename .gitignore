@@ -1,6 +1,6 @@
 # Directories
 node_modules
-/dist
+dist
 /media
 typings/
 build/Release
