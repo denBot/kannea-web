@@ -10,7 +10,7 @@ const isAuthenticatedAndAdmin = function (req, res, next) {
   if (
     req.session &&
     req.session.adminUser &&
-    req.session.adminUser.role === "admine"
+    req.session.adminUser.role === "admin"
   ) {
     next()
   } else {

@@ -13,23 +13,25 @@ router
     res.json(settings)
   })
   .put(isAuthenticatedAndAdmin, async (req, res) => {
-    const settings = await SiteConfigModel.findOneAndUpdate(
+    await SiteConfigModel.findOneAndUpdate(
       { _id: req.fields._id },
       req.fields,
       {
         returnOriginal: false,
       },
-      (error, obj) => {
-        res.json(error ? error : obj)
+      (err) => {
+        if (err) {
+          res.send(400, "Could not find settings with the given id")
+        } else {
+          res.send("Settings have been updated.")
+        }
       }
     )
-    if (settings == null) {
-      res.send(400, "Could not find valid settings given the provided id.")
-    }
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
     await SiteConfigModel.remove({})
-    await SiteConfigModel.create()
+    const settings = new SiteConfigModel()
+    settings.save()
     res.send(201, "Settings have been reset.")
   })
 
