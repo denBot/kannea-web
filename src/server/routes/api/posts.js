@@ -7,7 +7,9 @@ let router = express.Router()
 router
   .route("/")
   .get(async (req, res) => {
+    console.log(req.session)
     await Post.find()
+      .sort("-createdAt")
       .select("-content -updatedAt -__v")
       .populate({
         path: "author",
