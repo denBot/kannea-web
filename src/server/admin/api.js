@@ -12,17 +12,25 @@ router
     )
     res.json(settings)
   })
-  .post(async (req, res) => {
-    console.log(req.fields)
-    if (req.fields._id) {
-      const settings = await SiteConfigModel.findOneAndUpdate(
-        { _id: req.fields._id },
-        req.fields
-      )
-      res.json(settings)
-    } else {
-      res.json({ code: 400, message: "No settings ID provided." })
+  .put(isAuthenticatedAndAdmin, async (req, res) => {
+    const settings = await SiteConfigModel.findOneAndUpdate(
+      { _id: req.fields._id },
+      req.fields,
+      {
+        returnOriginal: false,
+      },
+      (error, obj) => {
+        res.json(error ? error : obj)
+      }
+    )
+    if (settings == null) {
+      res.send(400, "Could not find valid settings given the provided id.")
     }
+  })
+  .delete(isAuthenticatedAndAdmin, async (req, res) => {
+    await SiteConfigModel.remove({})
+    await SiteConfigModel.create()
+    res.send(201, "Settings have been reset.")
   })
 
 module.exports = router

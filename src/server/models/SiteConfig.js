@@ -35,8 +35,8 @@ const configSchema = new Schema(
     },
     closeComments: {
       type: Boolean,
-      default: false,
       required: true,
+      default: false,
     },
   },
   schemaOptions

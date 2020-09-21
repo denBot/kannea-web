@@ -2,10 +2,7 @@ const isAuthenticated = function (req, res, next) {
   if (req.session && req.session.adminUser) {
     next()
   } else {
-    res.json({
-      code: 403,
-      message: "User is unauthenticated or lacking permissions.",
-    })
+    res.send(403, "User is unauthenticated or lacking permissions.")
   }
 }
 
@@ -13,14 +10,11 @@ const isAuthenticatedAndAdmin = function (req, res, next) {
   if (
     req.session &&
     req.session.adminUser &&
-    req.session.adminUser.role === "admin"
+    req.session.adminUser.role === "admine"
   ) {
     next()
   } else {
-    res.json({
-      code: 403,
-      message: "User is unauthenticated or lacking permissions.",
-    })
+    res.send(403, "User is unauthenticated or lacking permissions.")
   }
 }
 
