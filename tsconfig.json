@@ -26,7 +26,8 @@
     "types": [
       "@types/node",
       "@nuxt/types"
-    ]
+    ],
+    "jsx": "react",
   },
   "exclude": [
     "node_modules",

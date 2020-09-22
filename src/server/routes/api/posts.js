@@ -1,9 +1,7 @@
 "use strict"
 const Post = require("../../models/Post")
 const express = require("express")
-const {
-  isAuthenticatedAndAdmin
-} = require("./middleware")
+const { isAuthenticatedAndAdmin } = require("./middleware")
 
 let router = express.Router()
 
@@ -24,7 +22,7 @@ router
       })
   })
   .post((res) => {
-    res.send("POST Posts")
+    res.status(200).send("Created a new post")
   })
 
 router

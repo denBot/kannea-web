@@ -7,14 +7,9 @@ const session = require("express-session")
 const mongoose = require("mongoose")
 const MongoStore = require("connect-mongo")(session)
 const AdminBroExpress = require("@admin-bro/express")
-
-//const { isAuthenticatedAndAdmin } = require("./middleware")
-
 const UserModel = require("../models/User")
 
-let router = express.Router()
-
-const sessionOptions = {
+const expressSessionOptions = {
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
@@ -35,19 +30,26 @@ const adminRouter = AdminBroExpress.buildAuthenticatedRouter(
     },
   },
   null,
-  sessionOptions
+  expressSessionOptions
 )
 
+let router = express.Router()
+
+// Initialise admin router
 router.use("/admin", adminRouter)
+
+// Add express-session to all other routes
 router.use(
   session({
-    ...sessionOptions,
+    ...expressSessionOptions,
     secret: process.env.ADMINBRO_COOKIE_PASSWORD,
     name: process.env.ADMINBRO_COOKIE_NAME,
   })
 )
+
+// Additional routes
 router.use("/", express.static(path.join(__dirname, "../../../dist")))
+router.use("/api", require("./api"))
 router.use("/static", express.static(path.join(__dirname, "static")))
-router.use("/api/posts", require("./api/posts"))
 
 module.exports = router

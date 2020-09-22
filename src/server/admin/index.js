@@ -23,6 +23,12 @@ const adminBro = new AdminBro({
     logo: process.env.DEFAULT_WEBSITE_LOGO,
   },
   rootPath: "/admin",
+  pages: {
+    settings: {
+      label: "Settings",
+      component: AdminBro.bundle("./components/pages/settings.page.tsx"),
+    },
+  },
 })
 
 module.exports = adminBro

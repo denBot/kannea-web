@@ -5,7 +5,7 @@ const { isAuthenticatedAndAdmin } = require("./middleware")
 let router = express.Router()
 
 router
-  .route("/settings")
+  .route("/")
   .get(isAuthenticatedAndAdmin, async (req, res) => {
     const settings = await SiteConfigModel.findOne().select(
       "-__v -createdAt -updatedAt -_immutable"
