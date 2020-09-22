@@ -1,11 +1,24 @@
-import { H4, Header, Label, Box, Input, CheckBox, Button } from 'admin-bro'
+import { H4, Header, Label, Box, Input, CheckBox, Button, DropZone, DropZoneProps, DropZoneItem } from 'admin-bro'
 import React, { Component } from 'react'; // let's also import Component
 import axios from "axios"
 import _ from "lodash"
 
 type settingsState = {
   settings: any,
-  isLoading: boolean
+  originalSettings: any,
+  isLoading: boolean,
+  faviconToUpload: boolean,
+  faviconLoaded: boolean
+}
+
+const validationOptions = {
+  mimeTypes: [
+    'image/jpeg',
+    'image/png',
+    'image/svg+xml',
+    'image/gif',
+    'image/webp'
+  ],
 }
 
 export class SettingsPage extends Component<{}, settingsState> {
@@ -14,17 +27,19 @@ export class SettingsPage extends Component<{}, settingsState> {
     super(props)
     this.state = {
       settings: null,
-      isLoading: true
+      originalSettings: null,
+      isLoading: true,
+      faviconToUpload: false,
+      faviconLoaded: false
     }
   }
 
   async getSettings() {
-    console.log("ping!")
     await axios.get("/api/settings")
       .then(response => {
-        console.log(response)
         this.setState({
           settings: response.data,
+          originalSettings: response.data,
           isLoading: false
         })
       }).catch(err => {
@@ -36,36 +51,57 @@ export class SettingsPage extends Component<{}, settingsState> {
     await this.getSettings()
   }
 
-  prepareSettings() {
-    let inputGroup: any[] = []
-    let checkBoxGroup: any[] = []
-    let keyIndex = 0
-
-    for (const setting in this.state.settings) {
-      if (setting == "_id") continue
-
-      switch (typeof this.state.settings[setting]) {
-        case "boolean":
-          checkBoxGroup.push(
-            <Box style={{ margin: 10, display: "flex", flexDirection: "row" }} key={keyIndex}>
-              <CheckBox required={true} value={this.state.settings[setting]}/>
-              <Label required={true}>{_.startCase(setting)}</Label>
-            </Box>
-
-          )
-          break
-        default:
-          inputGroup.push(
-            <Box style={{ margin: 10 }} key={keyIndex}>
-              <Label required={true}>{_.startCase(setting)}</Label>
-              <Input required={true} style={{width: '100%'}} value={this.state.settings[setting]}></Input>
-            </Box>
-          )
-      }
-      keyIndex++
+  handleChange (settingsAttribute: string, value: any) {
+    const settings = this.state.settings
+    if (settings) {
+      settings[settingsAttribute] = value
+      this.setState({ settings })
     }
-    console.log("eeep")
-    return [<H4 key={-2}>Input Options:</H4>].concat(inputGroup, <br/>, <H4 key={-1}>Toggleable Options:</H4>, checkBoxGroup)
+  }
+
+  handleFaviconImageLoaded () {
+    this.setState({faviconLoaded: true})
+  }
+
+  handleFaviconImageError() {
+    this.setState({ faviconLoaded: false })
+  }
+
+  getUploadSection (imageUrl: string) {
+    return (
+      <Box style={{ margin: 10, marginBottom: 20 }}>
+        <Label required={true}>{_.startCase(imageUrl)}:</Label>
+        <div style={{ display: 'flex' }}>
+          <div style={{ width: '6%', minWidth: 100, maxHeight: 72, }}>
+            {!this.state.faviconLoaded && <p>Placeholder</p>}
+            <img
+              src={this.state.settings[imageUrl]}
+              style={{ width: 84 }}
+              onLoad={this.handleFaviconImageLoaded.bind(this)}
+              onError={this.handleFaviconImageError.bind(this)}
+            />
+          </div>
+          <div style={{ width: '94%' }}>
+            <DropZone onChange={(event: any) => { console.log(event) }}
+              uploadLimitIn={'MB'}
+              multiple={false}
+              validate={validationOptions}
+            />
+            {this.state.faviconToUpload && (
+              <DropZoneItem
+                src={this.state.settings.faviconUrl}
+              />
+            )}
+          </div>
+        </div>
+        <Input
+          required={true}
+          style={{ width: '100%', marginTop: 10 }}
+          value={this.state.settings.faviconUrl}
+          onChange={(event: any) => { this.handleChange(imageUrl, event.target.value) }}
+        />
+      </Box>
+    )
   }
 
   render() {
@@ -78,12 +114,51 @@ export class SettingsPage extends Component<{}, settingsState> {
 
         <Box style={{margin: 32, padding: 32, background: '#fff' }}>
 
-          { this.state.settings ? this.prepareSettings() : '' }
+          { this.state.settings ? (
 
-          <Box style={{display: "flex", justifyContent: "center"}}>
+            <section>
+              <H4 style={{ marginBottom: 20 }}>Editable Settings</H4>
+              <Box style={{ margin: 10, marginBottom: 20 }}>
+                <Label required={true}>Website Name:</Label>
+                <Input
+                  required={true}
+                  style={{ width: '100%' }}
+                  value={this.state.settings.websiteName}
+                  onChange={(event: any) => { this.handleChange("websiteName", event.target.value) }}
+                />
+              </Box>
+              <Box style={{ margin: 10, marginBottom: 20 }}>
+                <Label required={true}>Contact Email:</Label>
+                <Input
+                  required={true}
+                  style={{ width: '100%' }}
+                  value={this.state.settings.contactEmail}
+                  onChange={(event: any) => { this.handleChange("contactEmail", event.target.value) }}
+                />
+              </Box>
+
+              <H4 style={{ marginTop: 30, marginBottom: 20 }}>Site Images:</H4>
+              { this.getUploadSection("faviconUrl")}
+
+              <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
+              <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
+                <CheckBox
+                  required={true}
+                  checked={false}
+                  onChange={(event: any) => { this.handleChange("websiteName", event.target.value) }}
+                />
+                <Label required={true}>Disable comments on all pages</Label>
+              </Box>
+            </section>
+
+          ) : ''}
+
+          <Box style={{display: "flex", justifyContent: "center", marginTop: 30}}>
             <Button variant="primary" style={{ marginRight: 10 }}>Save</Button>
           </Box>
         </Box>
+
+        { JSON.stringify(this.state.settings)}
       </section>
     )
   }
