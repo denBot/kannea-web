@@ -1,5 +1,5 @@
 "use strict"
-const SiteConfigModel = require("../models/SiteConfig")
+const SiteConfigModel = require("../../models/SiteConfig")
 const express = require("express")
 const { isAuthenticatedAndAdmin } = require("./middleware")
 let router = express.Router()

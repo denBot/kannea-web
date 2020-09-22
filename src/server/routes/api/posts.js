@@ -1,12 +1,15 @@
 "use strict"
 const Post = require("../../models/Post")
 const express = require("express")
+const {
+  isAuthenticatedAndAdmin
+} = require("./middleware")
 
 let router = express.Router()
 
 router
   .route("/")
-  .get(async (req, res) => {
+  .get(isAuthenticatedAndAdmin, async (req, res) => {
     console.log(req.session)
     await Post.find()
       .sort("-createdAt")

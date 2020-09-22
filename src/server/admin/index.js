@@ -1,15 +1,8 @@
-const AdminBro = require("admin-bro")
-const AdminBroExpress = require("@admin-bro/express")
-const AdminBroMongoose = require("@admin-bro/mongoose")
 const mongoose = require("mongoose")
-const argon2 = require("argon2")
-const session = require("express-session")
-const MongoStore = require("connect-mongo")(session)
+const AdminBro = require("admin-bro")
+const AdminBroMongoose = require("@admin-bro/mongoose")
 
 AdminBro.registerAdapter(AdminBroMongoose)
-
-// Models
-const UserModel = require("../models/User")
 
 // Admin Resources
 const AuthUser = require("./resources/User.admin")
@@ -32,26 +25,4 @@ const adminBro = new AdminBro({
   rootPath: "/admin",
 })
 
-const router = AdminBroExpress.buildAuthenticatedRouter(
-  adminBro,
-  {
-    cookieName: process.env.ADMINBRO_COOKIE_NAME,
-    cookiePassword: process.env.ADMINBRO_COOKIE_PASSWORD,
-    authenticate: async (email, password) => {
-      const user = await UserModel.findOne({ email })
-      return user && (await argon2.verify(user.encryptedPassword, password))
-        ? user
-        : null
-    },
-  },
-  null,
-  {
-    resave: false,
-    saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  }
-)
-
-router.use("/api/", require("./api"))
-
-module.exports = router
+module.exports = adminBro
