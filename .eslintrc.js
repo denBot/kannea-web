@@ -15,7 +15,7 @@ module.exports = {
     "plugin:prettier/recommended",
   ],
   // required to lint *.vue files
-  plugins: ["vue", "transform-class-properties"],
+  plugins: ["vue" ],
   // add your custom rules here
   rules: {
     semi: [2, "never"],
