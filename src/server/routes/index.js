@@ -48,8 +48,8 @@ router.use(
 )
 
 // Additional routes
-router.use("/", express.static(path.join(__dirname, "../../../dist")))
+router.use("/", express.static(path.join(__dirname, "../dist")))
 router.use("/api", require("./api"))
-router.use("/static", express.static(path.join(__dirname, "static")))
+router.use("/static", express.static(path.join(__dirname, "../static")))
 
 module.exports = router

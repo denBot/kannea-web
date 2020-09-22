@@ -1,5 +1,8 @@
 export default {
   srcDir: "src/frontend/",
+  generate: {
+    dir: "src/server/dist",
+  },
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: "kannea",
