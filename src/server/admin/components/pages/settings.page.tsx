@@ -80,12 +80,17 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
   handleChange (settingsAttribute: string, value: any) {
     const settings = this.state.settings
+    console.log(value)
     settings[settingsAttribute] = value
 
-    let invalidInput = value === ""
+    let invalidInput = false
 
-    if (settingsAttribute === "contactEmail" && !invalidInput) {
-      invalidInput = !this.isValidEmail(value)
+    if (typeof value !== "boolean") {
+      invalidInput = value === ""
+
+      if (settingsAttribute === "contactEmail" && !invalidInput) {
+        invalidInput = !this.isValidEmail(value)
+      }
     }
 
     this.setState({ settings, invalidInput })
@@ -198,8 +203,8 @@ export class SettingsPage extends React.Component<{}, settingsState> {
               <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
                 <CheckBox
                   required={true}
-                  checked={false}
-                  onChange={(event: any) => { this.handleChange("websiteName", event.target.value) }}
+                  checked={this.state.settings.closeComments}
+                  onChange={(event: any) => { this.handleChange("closeComments", !this.state.settings.closeComments) }}
                 />
                 <Label required={true}>Disable comments on all pages</Label>
               </Box>
