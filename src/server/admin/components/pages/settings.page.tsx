@@ -1,7 +1,7 @@
 import { H4, Header, Label, Box, Input, CheckBox, Button, Loader, MessageBox } from 'admin-bro'
 import React from 'react';
 import axios from "axios"
-import validator from "email-validator"
+
 import _ from "lodash"
 
 type settingsState = {
@@ -41,6 +41,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           originalSettings: response.data,
           isLoading: false
         })
+        console.log(this.state.settings)
       }).catch(err => {
         console.error(err)
       })
@@ -72,6 +73,11 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     await this.getSettings()
   }
 
+  isValidEmail (email: string) {
+    const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    return expression.test(String(email).toLowerCase())
+  }
+
   handleChange (settingsAttribute: string, value: any) {
     const settings = this.state.settings
     settings[settingsAttribute] = value
@@ -79,7 +85,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     let invalidInput = value === ""
 
     if (settingsAttribute === "contactEmail" && !invalidInput) {
-      invalidInput = !validator.validate(value)
+      invalidInput = !this.isValidEmail(value)
     }
 
     this.setState({ settings, invalidInput })
@@ -154,12 +160,12 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           />
         }
 
-        <Box style={{margin: 32, display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <Box style={{margin: 24, display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <Header>Settings Panel</Header>
-            <Button variant="danger">Reset</Button>
+            <Button variant="danger">Reset to default</Button>
         </Box>
 
-        <Box style={{margin: 32, padding: 32, background: '#fff' }}>
+        <Box style={{margin: 24, padding: 32, background: '#fff' }}>
 
           { this.state.settings ? (
 
@@ -205,12 +211,10 @@ export class SettingsPage extends React.Component<{}, settingsState> {
             { this.state.requestIsLoading ? (
                 <Button variant="success" style={{ marginRight: 10 }}>Saving...</Button>
             ) : (
-                <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save</Button>
+                <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save settings</Button>
             )}
           </Box>
         </Box>
-
-        { JSON.stringify(this.state.settings)}
       </section>
     )
   }
