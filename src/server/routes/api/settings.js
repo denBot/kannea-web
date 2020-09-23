@@ -20,16 +20,16 @@ router
       { returnOriginal: false },
       (err) => {
         if (err) {
-          res.send(400, "Could not find settings with the given id")
+          res.status(400).send("Could not find settings with the given id")
         } else {
-          res.send("Settings have been updated.")
+          res.status(200).send("Settings have been updated.")
         }
       }
     )
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
     await SiteConfigModel.deleteOne({})
-    const settings = new SiteConfigModel({
+    const settings = await SiteConfigModel.create({
       websiteName: process.env.DEFAULT_WEBSITE_NAME,
       contactEmail: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL,
       websiteDescription: process.env.DEFAULT_WEBSITE_DESCRIPTION,
@@ -37,8 +37,6 @@ router
       logoUrl: process.env.DEFAULT_WEBSITE_LOGO,
       headerUrl: process.env.DEFAULT_WEBSITE_HEADER,
     })
-    console.log(settings)
-    settings.save()
     res.json(settings)
   })
 

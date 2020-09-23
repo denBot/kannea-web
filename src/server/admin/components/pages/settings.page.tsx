@@ -48,27 +48,30 @@ export class SettingsPage extends React.Component<{}, settingsState> {
   }
 
   async resetSettings() {
-    this.setState({
-      isLoading: true,
-      successMessage: null,
-      errorMessage: null
-    })
-    await axios.delete("/api/settings")
-      .then(response => {
-        this.setState({
-          settings: response.data,
-          originalSettings: response.data,
-          successMessage: "Settings have been reset to default.",
-          isLoading: false
-        })
-        console.log(this.state.settings)
-      }).catch(err => {
-        console.error(err)
-        this.setState({
-          errorMessage: "Settings could not be reset... Check console for details.",
-          isLoading: false
-        })
+    if (window.confirm("This will reset all settings to default. Are you sure?")) {
+      this.setState({
+        isLoading: true,
+        successMessage: null,
+        errorMessage: null
       })
+
+      await axios.delete("/api/settings")
+        .then(response => {
+          this.setState({
+            settings: response.data,
+            originalSettings: response.data,
+            successMessage: "Settings have been reset to default.",
+            isLoading: false
+          })
+          console.log(this.state.settings)
+        }).catch(err => {
+          console.error(err)
+          this.setState({
+            errorMessage: "Settings could not be reset... Check console for details.",
+            isLoading: false
+          })
+        })
+    }
   }
 
   async saveSettings() {
@@ -138,7 +141,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     e.target.style.display = 'none'
   }
 
-  getUploadSection (imageUrl: string) {
+  renderImageSetting (imageUrl: string) {
     const isFavicon = imageUrl == "faviconUrl"
     const isLoaded = isFavicon ? this.state.faviconIsLoaded : this.state.logoIsLoaded
     return (
@@ -168,7 +171,36 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     )
   }
 
+  renderEditableSetting(handleChangeType: string, value: string) {
+    return (
+      <Box style={{ margin: 10, marginBottom: 20 }}>
+        <Label required={true}>{_.startCase(handleChangeType)}:</Label>
+        <Input
+          required={true}
+          style={{ width: '100%' }}
+          value={value}
+          onChange={(event: any) => { this.handleChange(handleChangeType, event.target.value) }}
+        />
+      </Box>
+    )
+  }
+
+  renderToggleableSetting(handleChangeType: string, value: boolean, description: string) {
+    return (
+      <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
+        <CheckBox
+          required={true}
+          checked={value}
+          onChange={(event: any) => { this.handleChange(handleChangeType, !value) }}
+        />
+        <Label required={true}>{description}</Label>
+      </Box>
+    )
+  }
+
   render() {
+    if (this.state.isLoading) return <Loader/>
+
     return (
       <section>
         {
@@ -198,40 +230,33 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
           { this.state.settings ? (
 
+
+
             <section>
+              <img
+                src={this.state.settings.headerUrl}
+                style={{
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  position: "relative",
+                  width: "100%",
+                  height: "18vw",
+                  maxHeight: 300,
+                  objectFit: "cover"
+                }} />
+
               <H4 style={{ marginBottom: 20 }}>Site Images:</H4>
-              { this.getUploadSection("faviconUrl")}
-              { this.getUploadSection("logoUrl")}
+              { this.renderImageSetting("faviconUrl")}
+              { this.renderImageSetting("logoUrl")}
 
               <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
-              <Box style={{ margin: 10, marginBottom: 20 }}>
-                <Label required={true}>Website Name:</Label>
-                <Input
-                  required={true}
-                  style={{ width: '100%' }}
-                  value={this.state.settings.websiteName}
-                  onChange={(event: any) => { this.handleChange("websiteName", event.target.value) }}
-                />
-              </Box>
-              <Box style={{ margin: 10, marginBottom: 20 }}>
-                <Label required={true}>Contact Email:</Label>
-                <Input
-                  required={true}
-                  style={{ width: '100%' }}
-                  value={this.state.settings.contactEmail}
-                  onChange={(event: any) => { this.handleChange("contactEmail", event.target.value) }}
-                />
-              </Box>
+
+              { this.renderEditableSetting("websiteName", this.state.settings.websiteName) }
+              { this.renderEditableSetting("contactEmail", this.state.settings.contactEmail) }
 
               <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
-              <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
-                <CheckBox
-                  required={true}
-                  checked={this.state.settings.closeComments}
-                  onChange={(event: any) => { this.handleChange("closeComments", !this.state.settings.closeComments) }}
-                />
-                <Label required={true}>Disable comments on all pages</Label>
-              </Box>
+              { this.renderToggleableSetting("closeComments", this.state.settings.closeComments, "Disable comments on all pages") }
             </section>
 
           ) : <Loader/>}
