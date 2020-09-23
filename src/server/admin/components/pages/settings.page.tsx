@@ -1,4 +1,4 @@
-import { H4, Header, Label, Box, Input, CheckBox, Button, Loader, MessageBox } from 'admin-bro'
+import { H4, Header, Label, Box, Input, CheckBox, Button, Loader, MessageBox, DropZone, DropZoneItem } from 'admin-bro'
 import React from 'react';
 import axios from "axios"
 
@@ -9,11 +9,18 @@ type settingsState = {
   originalSettings: any,
   isLoading: boolean,
   invalidInput: boolean,
+
   faviconIsLoaded: boolean,
   logoIsLoaded: boolean,
+  headerIsLoaded: boolean,
+
   requestIsLoading: boolean,
   successMessage: any,
-  errorMessage: any
+  errorMessage: any,
+
+  logoFile: any,
+  faviconFile: any,
+  headerFile: any
 }
 
 export class SettingsPage extends React.Component<{}, settingsState> {
@@ -24,12 +31,19 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       settings: null,
       originalSettings: null,
       isLoading: true,
+
       logoIsLoaded: false,
       faviconIsLoaded: false,
+      headerIsLoaded: false,
+
       invalidInput: false,
       requestIsLoading: false,
       successMessage: null,
-      errorMessage: null
+      errorMessage: null,
+
+      logoFile: null,
+      faviconFile: null,
+      headerFile: null
     }
   }
 
@@ -63,7 +77,6 @@ export class SettingsPage extends React.Component<{}, settingsState> {
             successMessage: "Settings have been reset to default.",
             isLoading: false
           })
-          console.log(this.state.settings)
         }).catch(err => {
           console.error(err)
           this.setState({
@@ -80,12 +93,20 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       successMessage: null,
       errorMessage: null
     })
-    const data = { ...this.state.settings }
-    await axios.put("/api/settings", data, { headers: {'Content-Type': 'application/json'}})
-      .then(() => {
+
+    let formData = new FormData();
+
+    formData.append("logoFile", this.state.logoFile)
+    formData.append("headerFile", this.state.headerFile)
+    formData.append("faviconFile", this.state.faviconFile)
+    formData.append("settings", JSON.stringify(this.state.settings))
+
+    await axios.post("/api/settings", formData, { headers: { "Content-Type": "multipart/form-data"}})
+      .then((res) => {
         this.setState({
           requestIsLoading: false,
           successMessage: "Successfully saved settings!",
+          settings: res.data
         })
       }).catch(err => {
         this.setState({
@@ -123,57 +144,123 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     this.setState({ settings, invalidInput })
   }
 
-  handleImageLoaded (e: any, isFavicon: boolean) {
-    if (isFavicon) {
-      this.setState({ faviconIsLoaded: true, invalidInput: false })
-    } else {
-      this.setState({ logoIsLoaded: true, invalidInput: false })
+  handleImageLoading (e: any, imageUrl: string, isLoaded: boolean) {
+    e.target.style.display = (isLoaded) ? "block" : "none"
+
+    switch (imageUrl) {
+      case "faviconUrl":
+        this.setState({ faviconIsLoaded: isLoaded }); break
+      case "logoUrl":
+        this.setState({ logoIsLoaded: isLoaded }); break
+      case "headerUrl":
+        this.setState({ headerIsLoaded: isLoaded }); break
     }
-    e.target.style.display = 'block'
   }
 
-  handleImageError(e: any, isFavicon: boolean) {
-    if (isFavicon) {
-      this.setState({ faviconIsLoaded: false, invalidInput: true })
-    } else {
-      this.setState({ logoIsLoaded: false, invalidInput: true })
+  handleFileSelection(file: any, imageUrl: string) {
+    switch (imageUrl) {
+      case "faviconUrl":
+        this.setState({ faviconFile: file }); break
+      case "logoUrl":
+        this.setState({ logoFile: file }); break
+      case "headerUrl":
+        this.setState({ headerFile: file }); break
     }
-    e.target.style.display = 'none'
   }
 
-  renderImageSetting (imageUrl: string) {
-    const isFavicon = imageUrl == "faviconUrl"
-    const isLoaded = isFavicon ? this.state.faviconIsLoaded : this.state.logoIsLoaded
+  renderImageSetting (imageUrl: string, label: string) {
+    let isLoaded = false
+    let mimeTypes: any[] = []
+
+    switch (imageUrl) {
+      case "faviconUrl":
+        mimeTypes = [
+          'image/x-icon',
+          'image/png'
+        ]
+        isLoaded = this.state.faviconIsLoaded; break
+      case "logoUrl":
+        mimeTypes = [
+          'image/jpeg',
+          'image/png',
+          'image/svg+xml'
+        ]
+        isLoaded = this.state.logoIsLoaded; break
+      case "headerUrl":
+        mimeTypes = [
+          'image/jpeg',
+          'image/png'
+        ]
+        isLoaded = this.state.headerIsLoaded; break
+    }
+
+    if (imageUrl == "headerUrl") return (
+      <section>
+        <Label required={true}>{label}:</Label>
+        {!isLoaded && <Loader />}
+        <img
+          src={this.state.settings.headerUrl}
+          onLoad={(e: any) => this.handleImageLoading(e, imageUrl, true)}
+          onError={(e: any) => this.handleImageLoading(e, imageUrl, false)}
+          style={{
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            position: "relative",
+            width: "100%",
+            height: "18vw",
+            maxHeight: 300,
+            objectFit: "cover"
+          }}
+          />
+          <section style={{marginTop: -3}}>
+            <DropZone
+              validate={{mimeTypes}}
+              onChange={(files) => {this.handleFileSelection(files[0], imageUrl)}}
+              uploadLimitIn={'MB'}
+              multiple={false}
+            />
+          </section>
+      </section>
+    )
+
     return (
-      <Box style={{ margin: 10, marginBottom: 20 }}>
+      <Box style={{ marginTop: 20, marginBottom: 20 }}>
+        <Label required={true}>{label}</Label>
         <div style={{ display: 'flex' }}>
-          <div style={{ width: '6%', minWidth: 100, maxHeight: 72, }}>
-            {!isLoaded && <section style={{ marginLeft: -40, marginTop: -40 }}><Loader/></section>}
+          <div style={{
+            width: '6%',
+            minWidth: 64,
+            border: "1px dashed #454655",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginRight: 10
+          }}>
+            {!isLoaded && <Loader/>}
             <img
               src={this.state.settings[imageUrl]}
-              style={{ width: 64, height: 64, backgroundSize: 'cover', marginLeft: 10 }}
-              onLoad={(e: any) => this.handleImageLoaded(e, isFavicon)}
-              onError={(e: any) => this.handleImageError(e, isFavicon)}
+              style={{ width: 48, height: 48, backgroundSize: 'cover' }}
+              onLoad={(e: any) => this.handleImageLoading(e, imageUrl, true)}
+              onError={(e: any) => this.handleImageLoading(e, imageUrl, false)}
             />
           </div>
           <div style={{ width: '94%' }}>
-            <Label required={true}>Enter a valid {_.startCase(imageUrl)} below:</Label>
-            <Input
-              required={true}
-              style={{ width: '100%', marginTop: 10 }}
-              value={this.state.settings[imageUrl]}
-              onChange={(e: any) => this.handleChange(imageUrl, e.target.value)}
+            <DropZone
+              multiple={false}
+              validate={{ mimeTypes }}
+              uploadLimitIn={'MB'}
+              onChange={(files) => { this.handleFileSelection(files[0], imageUrl) }}
             />
           </div>
         </div>
-
       </Box>
     )
   }
 
   renderEditableSetting(handleChangeType: string, value: string) {
     return (
-      <Box style={{ margin: 10, marginBottom: 20 }}>
+      <Box style={{ marginTop: 10, marginBottom: 20 }}>
         <Label required={true}>{_.startCase(handleChangeType)}:</Label>
         <Input
           required={true}
@@ -187,7 +274,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
   renderToggleableSetting(handleChangeType: string, value: boolean, description: string) {
     return (
-      <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
+      <Box style={{ marginTop: 10, marginBottom: 20, display: "flex", flexDirection: "row" }}>
         <CheckBox
           required={true}
           checked={value}
@@ -230,44 +317,34 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
           { this.state.settings ? (
 
-
-
             <section>
-              <img
-                src={this.state.settings.headerUrl}
-                style={{
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  position: "relative",
-                  width: "100%",
-                  height: "18vw",
-                  maxHeight: 300,
-                  objectFit: "cover"
-                }} />
 
-              <H4 style={{ marginBottom: 20 }}>Site Images:</H4>
-              { this.renderImageSetting("faviconUrl")}
-              { this.renderImageSetting("logoUrl")}
+              <section>
+                { this.renderImageSetting("headerUrl", "Website Header Image:")}
+                { this.renderImageSetting("faviconUrl", "Website Favicon Image:")}
+                { this.renderImageSetting("logoUrl", "Website Logo:")}
+              </section>
 
-              <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
+              <section>
+                <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
+                { this.renderEditableSetting("websiteName", this.state.settings.websiteName)}
+                { this.renderEditableSetting("contactEmail", this.state.settings.contactEmail)}
+              </section>
 
-              { this.renderEditableSetting("websiteName", this.state.settings.websiteName) }
-              { this.renderEditableSetting("contactEmail", this.state.settings.contactEmail) }
-
-              <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
-              { this.renderToggleableSetting("closeComments", this.state.settings.closeComments, "Disable comments on all pages") }
+              <section>
+                <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
+                { this.renderToggleableSetting("closeComments", this.state.settings.closeComments, "Disable comments on all pages") }
+              </section>
             </section>
 
           ) : <Loader/>}
 
           <Box style={{display: "flex", justifyContent: "center", marginTop: 30}}>
-            { this.state.requestIsLoading ? (
-                <Button variant="success" style={{ marginRight: 10 }}>Saving...</Button>
-            ) : (
-                <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save settings</Button>
-            )}
+            {(this.state.requestIsLoading)  && <Button variant="secondary" style={{ marginRight: 10 }} disabled={true}>Saving settings...</Button>}
+            {(this.state.isLoading) && <Button variant="success" style={{ marginRight: 10 }}>Loading settings...</Button>}
+            {(!this.state.requestIsLoading && !this.state.isLoading) && <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save settings</Button>}
           </Box>
+
         </Box>
       </section>
     )

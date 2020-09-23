@@ -13,12 +13,15 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Initial setup
-app.use(bodyParser.json())
-app.use(require("./routes"))
-app.use(express.json({ limit: "50mb" }))
-app.use(express.urlencoded({ limit: "50mb", extended: true }))
-app.use(express.json())
 app.use(cors())
+app.use(require("./routes"))
+app.use(bodyParser.json())
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+  })
+)
 
 // Connect to DB and check/construct SiteConfig if not present
 connectDB()

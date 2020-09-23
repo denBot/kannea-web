@@ -44,6 +44,7 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.1",
+    "formidable": "^1.2.2",
     "is-image-url": "^1.1.8",
     "jsdom": "^16.4.0",
     "lodash": "^4.17.20",
