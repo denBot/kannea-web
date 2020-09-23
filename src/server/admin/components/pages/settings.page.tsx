@@ -1,6 +1,7 @@
 import { H4, Header, Label, Box, Input, CheckBox, Button, Loader, MessageBox, DropZone, DropZoneItem } from 'admin-bro'
-import React from 'react';
+import React from 'react'
 import axios from "axios"
+import Quill from 'quill';
 
 import _ from "lodash"
 
@@ -20,7 +21,10 @@ type settingsState = {
 
   logoFile: any,
   faviconFile: any,
-  headerFile: any
+  headerFile: any,
+
+  editor: any,
+  editorContainer: any
 }
 
 export class SettingsPage extends React.Component<{}, settingsState> {
@@ -28,6 +32,9 @@ export class SettingsPage extends React.Component<{}, settingsState> {
   constructor(props: any) {
     super(props)
     this.state = {
+      editor: null,
+      editorContainer: React.createRef(),
+
       settings: null,
       originalSettings: null,
       isLoading: true,
@@ -103,6 +110,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
     await axios.post("/api/settings", formData, { headers: { "Content-Type": "multipart/form-data"}})
       .then((res) => {
+        console.log("eep")
         this.setState({
           requestIsLoading: false,
           successMessage: "Successfully saved settings!",
@@ -119,6 +127,22 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
   async componentDidMount() {
     await this.getSettings()
+
+    this.setState({
+      editor: new Quill(this.state.editorContainer.current, {
+        theme: 'snow'
+      })
+    })
+
+    this.state.editor.on('text-change', (e: any) => {
+      this.handleChange(
+        "websiteDescription",
+        this.state.editor.root.innerHTML)
+      })
+  }
+
+  componentWillUnmount() {
+    this.state.editor.off('selection-change', (e: any) => console.log(e))
   }
 
   isValidEmail (email: string) {
@@ -272,6 +296,16 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     )
   }
 
+  renderTextFieldSetting(handleChangeType: string, value: string) {
+    return (
+      <Box style={{ marginTop: 10, marginBottom: 20 }}>
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"></link>
+        <Label required={true}>{_.startCase(handleChangeType)}:</Label>
+        <div ref={this.state.editorContainer}></div>
+      </Box>
+    )
+  }
+
   renderToggleableSetting(handleChangeType: string, value: boolean, description: string) {
     return (
       <Box style={{ marginTop: 10, marginBottom: 20, display: "flex", flexDirection: "row" }}>
@@ -320,15 +354,17 @@ export class SettingsPage extends React.Component<{}, settingsState> {
             <section>
 
               <section>
-                { this.renderImageSetting("headerUrl", "Website Header Image:")}
-                { this.renderImageSetting("faviconUrl", "Website Favicon Image:")}
-                { this.renderImageSetting("logoUrl", "Website Logo:")}
+                { this.renderImageSetting("headerUrl", "Website Header Image:") }
+                { this.renderImageSetting("faviconUrl", "Website Favicon Image:") }
+                { this.renderImageSetting("logoUrl", "Website Logo:") }
               </section>
 
               <section>
                 <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
-                { this.renderEditableSetting("websiteName", this.state.settings.websiteName)}
-                { this.renderEditableSetting("contactEmail", this.state.settings.contactEmail)}
+                { this.renderEditableSetting("websiteName", this.state.settings.websiteName) }
+                { this.renderEditableSetting("contactEmail", this.state.settings.contactEmail) }
+                <div id="#editor"></div>
+                { this.renderTextFieldSetting("websiteDescription", this.state.settings.websiteDescription) }
               </section>
 
               <section>

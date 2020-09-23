@@ -25,10 +25,8 @@ router
   .post(isAuthenticatedAndAdmin, async (req, res) => {
     new formidable.IncomingForm().parse(req, async (err, fields, files) => {
       let settings = JSON.parse(fields.settings)
-      console.log(settings)
 
       for (const fileType of Object.keys(files)) {
-        console.log(fileType)
         switch (fileType) {
           case "headerFile":
             settings.headerUrl = await uploadSettingsImage(files[fileType], {
@@ -65,7 +63,6 @@ router
             if (err) {
               res.status(400).send("Could not find settings with the given id")
             } else {
-              console.log(settings)
               res.json(settings)
             }
           }
