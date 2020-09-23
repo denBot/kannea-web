@@ -9,13 +9,12 @@ const AuthUser = require("./resources/User.admin")
 const Post = require("./resources/Post.admin")
 const Comment = require("./resources/Comment.admin")
 const SocialMedia = require("./resources/SocialMedia.admin")
-const SiteConfig = require("./resources/SiteConfig.admin")
 
 // Asynchronous export required due to DB Query: accessing Site Config document via mongoose
 
 const adminBro = new AdminBro({
   databases: [mongoose],
-  resources: [AuthUser, Post, Comment, SocialMedia, SiteConfig],
+  resources: [AuthUser, Post, Comment, SocialMedia],
   branding: {
     softwareBrothers: false,
     companyName: process.env.DEFAULT_WEBSITE_NAME,

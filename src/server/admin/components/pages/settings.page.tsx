@@ -162,15 +162,19 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
         <Box style={{margin: 24, display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <Header>Settings Panel</Header>
-            <Button variant="danger">Reset to default</Button>
+            <Button variant="danger">Reset</Button>
         </Box>
 
-        <Box style={{margin: 24, padding: 32, background: '#fff' }}>
+        <Box style={{margin: 24, padding: 16, background: '#fff' }}>
 
           { this.state.settings ? (
 
             <section>
-              <H4 style={{ marginBottom: 20 }}>Editable Settings</H4>
+              <H4 style={{ marginBottom: 20 }}>Site Images:</H4>
+              { this.getUploadSection("faviconUrl")}
+              { this.getUploadSection("logoUrl")}
+
+              <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
               <Box style={{ margin: 10, marginBottom: 20 }}>
                 <Label required={true}>Website Name:</Label>
                 <Input
@@ -189,10 +193,6 @@ export class SettingsPage extends React.Component<{}, settingsState> {
                   onChange={(event: any) => { this.handleChange("contactEmail", event.target.value) }}
                 />
               </Box>
-
-              <H4 style={{ marginTop: 40, marginBottom: 20 }}>Site Images:</H4>
-              { this.getUploadSection("faviconUrl")}
-              { this.getUploadSection("logoUrl")}
 
               <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
               <Box style={{ margin: 10, display: "flex", flexDirection: "row" }}>
