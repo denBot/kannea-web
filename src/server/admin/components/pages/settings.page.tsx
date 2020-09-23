@@ -1,5 +1,5 @@
-import { H4, Header, Label, Box, Input, CheckBox, Button, DropZone, DropZoneProps, DropZoneItem, Loader } from 'admin-bro'
-import React, { Component } from 'react'; // let's also import Component
+import { H4, Header, Label, Box, Input, CheckBox, Button, Loader, MessageBox } from 'admin-bro'
+import React from 'react';
 import axios from "axios"
 import validator from "email-validator"
 import _ from "lodash"
@@ -10,10 +10,13 @@ type settingsState = {
   isLoading: boolean,
   invalidInput: boolean,
   faviconIsLoaded: boolean,
-  logoIsLoaded: boolean
+  logoIsLoaded: boolean,
+  requestIsLoading: boolean,
+  successMessage: any,
+  errorMessage: any
 }
 
-export class SettingsPage extends Component<{}, settingsState> {
+export class SettingsPage extends React.Component<{}, settingsState> {
 
   constructor(props: any) {
     super(props)
@@ -23,7 +26,10 @@ export class SettingsPage extends Component<{}, settingsState> {
       isLoading: true,
       logoIsLoaded: false,
       faviconIsLoaded: false,
-      invalidInput: false
+      invalidInput: false,
+      requestIsLoading: false,
+      successMessage: null,
+      errorMessage: null
     }
   }
 
@@ -36,6 +42,28 @@ export class SettingsPage extends Component<{}, settingsState> {
           isLoading: false
         })
       }).catch(err => {
+        console.error(err)
+      })
+  }
+
+  async saveSettings() {
+    this.setState({
+      requestIsLoading: true,
+      successMessage: null,
+      errorMessage: null
+    })
+    const data = { ...this.state.settings }
+    await axios.put("/api/settings", data, { headers: {'Content-Type': 'application/json'}})
+      .then(() => {
+        this.setState({
+          requestIsLoading: false,
+          successMessage: "Successfully saved settings!",
+        })
+      }).catch(err => {
+        this.setState({
+          requestIsLoading: false,
+          errorMessage: "Could not save settings... See console for details.",
+        })
         console.error(err)
       })
   }
@@ -85,7 +113,7 @@ export class SettingsPage extends Component<{}, settingsState> {
             {!isLoaded && <section style={{ marginLeft: -40, marginTop: -40 }}><Loader/></section>}
             <img
               src={this.state.settings[imageUrl]}
-              style={{ width: 64, marginLeft: 10 }}
+              style={{ width: 64, height: 64, backgroundSize: 'cover', marginLeft: 10 }}
               onLoad={(e: any) => this.handleImageLoaded(e, isFavicon)}
               onError={(e: any) => this.handleImageError(e, isFavicon)}
             />
@@ -106,9 +134,26 @@ export class SettingsPage extends Component<{}, settingsState> {
   }
 
   render() {
-    console.log(this.state.faviconToUpload)
     return (
       <section>
+        {
+          this.state.successMessage &&
+          <MessageBox
+            variant="success"
+            message={this.state.successMessage}
+            onCloseClick={() => this.setState({successMessage: null})}
+          />
+        }
+
+        {
+          this.state.errorMessage &&
+          <MessageBox
+            variant="danger"
+            message={this.state.errorMessage}
+            onCloseClick={() => this.setState({ errorMessage: null})}
+          />
+        }
+
         <Box style={{margin: 32, display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <Header>Settings Panel</Header>
             <Button variant="danger">Reset</Button>
@@ -157,7 +202,11 @@ export class SettingsPage extends Component<{}, settingsState> {
           ) : <Loader/>}
 
           <Box style={{display: "flex", justifyContent: "center", marginTop: 30}}>
-            <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput}>Save</Button>
+            { this.state.requestIsLoading ? (
+                <Button variant="success" style={{ marginRight: 10 }}>Saving...</Button>
+            ) : (
+                <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save</Button>
+            )}
           </Box>
         </Box>
 

@@ -13,12 +13,12 @@ router
     res.json(settings)
   })
   .put(isAuthenticatedAndAdmin, async (req, res) => {
+    console.log(req.body)
+    const settings = req.body
     await SiteConfigModel.findOneAndUpdate(
-      { _id: req.fields._id },
-      req.fields,
-      {
-        returnOriginal: false,
-      },
+      { _id: settings._id },
+      settings,
+      { returnOriginal: false },
       (err) => {
         if (err) {
           res.send(400, "Could not find settings with the given id")
