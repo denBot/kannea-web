@@ -8,6 +8,7 @@ const after = async (response, request, context) => {
   const { record, uploadImage } = context
 
   if (record.isValid() && uploadImage) {
+    console.log(uploadImage)
     try {
       const uploadedResponse = await cloudinary.uploader.upload(
         uploadImage.path,
