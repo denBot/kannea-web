@@ -16,27 +16,36 @@ const configSchema = new Schema(
     websiteName: {
       type: String,
       required: true,
-      default: process.env.DEFAULT_WEBSITE_NAME,
     },
     contactEmail: {
       type: String,
       required: true,
-      default: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL,
+    },
+    websiteDescription: {
+      type: String,
+      required: true,
     },
     faviconUrl: {
       type: String,
       required: true,
-      default: process.env.DEFAULT_WEBSITE_FAVICON,
     },
     logoUrl: {
       type: String,
       required: true,
-      default: process.env.DEFAULT_WEBSITE_LOGO,
+    },
+    headerUrl: {
+      type: String,
+      required: true,
     },
     closeComments: {
       type: Boolean,
       required: true,
       default: false,
+    },
+    showDescription: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
   },
   schemaOptions

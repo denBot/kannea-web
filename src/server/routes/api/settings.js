@@ -13,7 +13,6 @@ router
     res.json(settings)
   })
   .put(isAuthenticatedAndAdmin, async (req, res) => {
-    console.log(req.body)
     const settings = req.body
     await SiteConfigModel.findOneAndUpdate(
       { _id: settings._id },
@@ -29,10 +28,18 @@ router
     )
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
-    await SiteConfigModel.remove({})
-    const settings = new SiteConfigModel()
+    await SiteConfigModel.deleteOne({})
+    const settings = new SiteConfigModel({
+      websiteName: process.env.DEFAULT_WEBSITE_NAME,
+      contactEmail: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL,
+      websiteDescription: process.env.DEFAULT_WEBSITE_DESCRIPTION,
+      faviconUrl: process.env.DEFAULT_WEBSITE_FAVICON,
+      logoUrl: process.env.DEFAULT_WEBSITE_LOGO,
+      headerUrl: process.env.DEFAULT_WEBSITE_HEADER,
+    })
+    console.log(settings)
     settings.save()
-    res.send(201, "Settings have been reset.")
+    res.json(settings)
   })
 
 module.exports = router

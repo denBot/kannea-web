@@ -47,6 +47,30 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       })
   }
 
+  async resetSettings() {
+    this.setState({
+      isLoading: true,
+      successMessage: null,
+      errorMessage: null
+    })
+    await axios.delete("/api/settings")
+      .then(response => {
+        this.setState({
+          settings: response.data,
+          originalSettings: response.data,
+          successMessage: "Settings have been reset to default.",
+          isLoading: false
+        })
+        console.log(this.state.settings)
+      }).catch(err => {
+        console.error(err)
+        this.setState({
+          errorMessage: "Settings could not be reset... Check console for details.",
+          isLoading: false
+        })
+      })
+  }
+
   async saveSettings() {
     this.setState({
       requestIsLoading: true,
@@ -167,7 +191,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
         <Box style={{margin: 24, display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <Header>Settings Panel</Header>
-            <Button variant="danger">Reset</Button>
+          <Button variant="danger" onClick={async () => { await this.resetSettings() }}>Reset</Button>
         </Box>
 
         <Box style={{margin: 24, padding: 16, background: '#fff' }}>
