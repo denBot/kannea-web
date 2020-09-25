@@ -25,7 +25,7 @@ const adminBro = new AdminBro({
   pages: {
     settings: {
       label: "Settings",
-      component: AdminBro.bundle("./components/pages/settings.page.tsx"),
+      component: AdminBro.bundle("./components/settings/SettingsPage.tsx"),
     },
   },
 })

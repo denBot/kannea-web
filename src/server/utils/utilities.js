@@ -50,6 +50,33 @@ const Utilities = {
     }
     return input
   },
+
+  getDefaultSettings: () => {
+    return {
+      textFields: {
+        websiteName: {
+          value: process.env.DEFAULT_WEBSITE_NAME,
+        },
+        contactEmail: {
+          value: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL,
+        },
+        websiteDescription: {
+          value: process.env.DEFAULT_WEBSITE_DESCRIPTION,
+        },
+      },
+      imageFields: {
+        homepageBanner: {
+          url: process.env.DEFAULT_WEBSITE_HOMEPAGE_BANNER,
+        },
+        websiteFavicon: {
+          url: process.env.DEFAULT_WEBSITE_FAVICON,
+        },
+        websiteLogo: {
+          url: process.env.DEFAULT_WEBSITE_LOGO,
+        },
+      },
+    }
+  },
 }
 
 module.exports = Utilities

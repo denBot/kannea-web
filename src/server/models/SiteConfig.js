@@ -13,39 +13,143 @@ const configSchema = new Schema(
       unique: true,
       immutable: true,
     },
-    websiteName: {
-      type: String,
-      required: true,
+
+    textFields: {
+      websiteName: {
+        value: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Enter a name for your website:",
+        },
+        fieldType: {
+          type: String,
+          default: "textfield",
+        },
+      },
+      contactEmail: {
+        value: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Enter a valid contact email address:",
+        },
+        fieldType: {
+          type: String,
+          default: "emailfield",
+        },
+      },
+      websiteDescription: {
+        value: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Enter a name for your website:",
+        },
+        fieldType: {
+          type: String,
+          default: "textarea",
+        },
+      },
     },
-    contactEmail: {
-      type: String,
-      required: true,
+
+    imageFields: {
+      homepageBanner: {
+        url: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Upload a header image for the homepage",
+        },
+        mimeTypes: {
+          type: Array,
+          default: ["image/jpeg", "image/png"],
+        },
+        previewType: {
+          type: String,
+          default: "banner",
+        },
+      },
+      websiteFavicon: {
+        url: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Upload a Favicon for the website",
+        },
+        mimeTypes: {
+          type: Array,
+          default: ["image/x-icon", "image/png"],
+        },
+        previewType: {
+          type: String,
+          default: "small",
+        },
+      },
+      websiteLogo: {
+        url: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          default: "Upload a logo for the website NavBar",
+        },
+        mimeTypes: {
+          type: Array,
+          default: ["image/jpeg", "image/png", "image/svg+xml"],
+        },
+        previewType: {
+          type: String,
+          default: "small",
+        },
+      },
     },
-    websiteDescription: {
-      type: String,
-      required: true,
-    },
-    faviconUrl: {
-      type: String,
-      required: true,
-    },
-    logoUrl: {
-      type: String,
-      required: true,
-    },
-    headerUrl: {
-      type: String,
-      required: true,
-    },
-    closeComments: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    showDescription: {
-      type: Boolean,
-      required: true,
-      default: true,
+
+    checkboxFields: {
+      disableComments: {
+        value: {
+          type: Boolean,
+          required: true,
+          default: false,
+        },
+        description: {
+          type: String,
+          default: "Disable commenting on all posts.",
+        },
+      },
+      hideComments: {
+        value: {
+          type: Boolean,
+          required: true,
+          default: false,
+        },
+        description: {
+          type: String,
+          default: "Hide comments section on all posts.",
+        },
+      },
+      removeWebsiteDescription: {
+        value: {
+          type: Boolean,
+          required: true,
+          default: false,
+        },
+        description: {
+          type: String,
+          default: "Remove the website description from the homepage.",
+        },
+      },
     },
   },
   schemaOptions

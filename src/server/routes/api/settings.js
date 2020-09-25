@@ -2,6 +2,7 @@
 const SiteConfigModel = require("../../models/SiteConfig")
 const express = require("express")
 const { cloudinary } = require("../../utils/cloudinary")
+const { getDefaultSettings } = require("../../utils/utilities")
 const { isAuthenticatedAndAdmin } = require("./middleware")
 const formidable = require("formidable")
 let router = express.Router()
@@ -68,14 +69,7 @@ router
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
     await SiteConfigModel.deleteOne({})
-    const settings = await SiteConfigModel.create({
-      websiteName: process.env.DEFAULT_WEBSITE_NAME,
-      contactEmail: process.env.DEFAULT_WEBSITE_CONTACT_EMAIL,
-      websiteDescription: process.env.DEFAULT_WEBSITE_DESCRIPTION,
-      faviconUrl: process.env.DEFAULT_WEBSITE_FAVICON,
-      logoUrl: process.env.DEFAULT_WEBSITE_LOGO,
-      headerUrl: process.env.DEFAULT_WEBSITE_HEADER,
-    })
+    const settings = await SiteConfigModel.create(getDefaultSettings())
     res.json(settings)
   })
 
