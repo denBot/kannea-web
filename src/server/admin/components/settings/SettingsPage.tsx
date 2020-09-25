@@ -293,8 +293,8 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       }
 
       textFields.push(
-        <Box style={{ marginTop: 10, marginBottom: 20 }}>
-          <Label required={true}>textField.description}:</Label>
+        <Box style={{ marginTop: 10, marginBottom: 20 }} key={textFieldKey}>
+          <Label required={true}>{textField.description}:</Label>
           {inputComponent}
         </Box>
       )
@@ -363,8 +363,6 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           */}
 
           {/** isLoadingMessage will be set to null if GET settings request is successful  */}
-          {this.state.isLoadingMessage == "mounting" && <Loader/>}
-
           <Box style={{display: "flex", justifyContent: "center", marginTop: 30}}>
             {this.state.isLoading && <Button variant="success" style={{ marginRight: 10 }}>{this.state.isLoadingMessage}</Button>}
             {!this.state.isLoading && <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save settings</Button>}
