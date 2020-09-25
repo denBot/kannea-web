@@ -108,6 +108,8 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     formData.append("faviconFile", this.state.faviconFile)
     formData.append("settings", JSON.stringify(this.state.settings))
 
+    console.log(this.state.settings)
+
     await axios.post("/api/settings", formData, { headers: { "Content-Type": "multipart/form-data"}})
       .then((res) => {
         console.log("eep")
@@ -133,6 +135,8 @@ export class SettingsPage extends React.Component<{}, settingsState> {
         theme: 'snow'
       })
     })
+
+    this.state.editor.clipboard.dangerouslyPasteHTML(0, this.state.settings.websiteDescription)
 
     this.state.editor.on('text-change', (e: any) => {
       this.handleChange(

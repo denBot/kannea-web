@@ -50,24 +50,20 @@ router
             })
             break
         }
-
-        await SiteConfigModel.findOneAndUpdate(
-          {
-            _id: settings._id,
-          },
-          settings,
-          {
-            returnOriginal: false,
-          },
-          (err, settings) => {
-            if (err) {
-              res.status(400).send("Could not find settings with the given id")
-            } else {
-              res.json(settings)
-            }
-          }
-        )
       }
+
+      await SiteConfigModel.findOneAndUpdate(
+        { _id: settings._id },
+        settings,
+        { returnOriginal: false },
+        (err, settings) => {
+          if (err) {
+            res.status(400).send("Could not find settings with the given id")
+          } else {
+            res.json(settings)
+          }
+        }
+      )
     })
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
