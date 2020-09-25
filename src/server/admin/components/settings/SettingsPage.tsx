@@ -4,6 +4,7 @@ import axios from "axios"
 import Quill from 'quill';
 
 import _ from "lodash"
+import { text } from 'body-parser';
 
 type settingsState = {
   imageFields: any,
@@ -17,8 +18,10 @@ type settingsState = {
 
   responseMessage: any,
 
-  editor: any,
-  editorContainer: any
+  quillEditors: any,
+  quillEditorContainers: any,
+
+  filesToUpload: any,
 }
 
 
@@ -31,8 +34,10 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       textFields: null,
       checkboxFields: null,
 
-      editor: null,
-      editorContainer: React.createRef(),
+      filesToUpload: [],
+
+      quillEditors: null,
+      quillEditorContainers: [],
 
       isLoading: true,
       isLoadingMessage: "mounting",
@@ -133,26 +138,45 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       })
   }
 
-  async componentDidMount() {
-    await this.getSettings()
+  buildQuillEditors() {
+    let quillEditors: any = {}
+    let quillEditorContainers: any = {}
 
-    this.setState({
-      editor: new Quill(this.state.editorContainer.current, {
-        theme: 'snow'
-      })
+    // Get keys of text area fields and
+    const textAreaFieldKeys = Object.keys(this.state.textFields).filter((key) => {
+      if (this.state.textFields[key].fieldType === "textarea") {
+        // Create reference to container for textarea
+        quillEditorContainers[key] = React.createRef()
+        return true
+      }
     })
 
-    this.state.editor.clipboard.dangerouslyPasteHTML(0, this.state.textFields.websiteDescription.value)
+    this.setState({ quillEditorContainers })
 
-    this.state.editor.on('text-change', (e: any) => {
-      this.handleChange(
-        "websiteDescription",
-        this.state.editor.root.innerHTML)
+    // Build Quill editors
+    for (const textFieldKey of textAreaFieldKeys) {
+      let editor = new Quill(this.state.quillEditorContainers[textFieldKey].current, { theme: 'snow' })
+
+      editor.clipboard.dangerouslyPasteHTML(0, this.state.textFields[textFieldKey].value)
+      editor.on('text-change', (e: any) => {
+        this.handleSettingsChange("textFields", textFieldKey, editor.root.innerHTML)
       })
+
+      quillEditors[textFieldKey] = editor
+    }
+
+    this.setState({ quillEditors })
+  }
+
+  async componentDidMount() {
+    await this.getSettings()
+    this.buildQuillEditors()
   }
 
   componentWillUnmount() {
-    this.state.editor.off('selection-change', (e: any) => console.log(e))
+    for (const editor of this.state.quillEditors) {
+      editor.off('selection-change', () => {})
+    }
   }
 
   isValidEmail (email: string) {
@@ -160,22 +184,26 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     return expression.test(String(email).toLowerCase())
   }
 
-  handleChange (settingsAttribute: string, value: any) {
-    const settings = this.state.settings
-    console.log(value)
-    settings[settingsAttribute] = value
-
-    let invalidInput = false
-
-    if (typeof value !== "boolean") {
-      invalidInput = value === ""
-
-      if (settingsAttribute === "contactEmail" && !invalidInput) {
-        invalidInput = !this.isValidEmail(value)
-      }
+  handleSettingsChange (fieldType: string, key: string, value: any) {
+    switch (fieldType) {
+      case "textFields":
+        this.state.textFields[key].value = value
+        this.setState({
+          textFields: this.state.textFields
+        })
+        break
+      case "fileUpload":
+        this.state.filesToUpload[key] = value
+        this.setState({
+          filesToUpload: this.state.filesToUpload
+        })
+        break
+      case "checkboxFields":
+        this.state.checkboxFields[key].value = value
+        this.setState({
+          checkboxFields: this.state.checkboxFields
+        })
     }
-
-    this.setState({ settings, invalidInput })
   }
 
 /*   handleImageLoading (e: any, imageUrl: string, isLoaded: boolean) {
@@ -205,20 +233,20 @@ export class SettingsPage extends React.Component<{}, settingsState> {
   renderImageFields () {
     let imageFields = []
 
-    for (const imageKey of Object.keys(this.state.imageFields)) {
-      const image = this.state.imageFields[imageKey]
+    for (const imageFieldKey of Object.keys(this.state.imageFields)) {
+      const image = this.state.imageFields[imageFieldKey]
       const label = <Label required={true}>{image.description}</Label>
       const dropZone = <DropZone
         multiple={false}
         validate={{ mimeTypes: image.mimeTypes }}
         uploadLimitIn={'MB'}
-        onChange={(files) => { console.log(files) }}
+        onChange={(files) => { this.handleSettingsChange("fileUpload", imageFieldKey, files[0]) }}
       />
 
       switch (image.previewType) {
         case "banner":
           imageFields.push(
-            <section key={imageKey}>
+            <section key={imageFieldKey}>
               { label }
               <img
                 src={image.url}
@@ -241,7 +269,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           break
         case "small":
           imageFields.push(
-            <Box style={{ marginTop: 20, marginBottom: 20 }} key={imageKey}>
+            <Box style={{ marginTop: 20, marginBottom: 20 }} key={imageFieldKey}>
               { label }
               <div style={{ display: 'flex' }}>
                 <div style={{
@@ -271,16 +299,17 @@ export class SettingsPage extends React.Component<{}, settingsState> {
   }
 
   renderTextFields() {
-    let textFields : any[] = []
+    let textFields = []
 
     for (const textFieldKey of Object.keys(this.state.textFields)) {
       const textField = this.state.textFields[textFieldKey]
+
       let inputComponent = null
 
       switch (textField.fieldType) {
 
         case "textarea":
-          inputComponent = <div ref={this.state.editorContainer}></div>
+          inputComponent = <div ref={this.state.quillEditorContainers[textFieldKey]}></div>
           break
 
         default:
@@ -288,7 +317,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
             required={true}
             style={{ width: '100%' }}
             value={textField.value}
-            //onChange={(event: any) => { this.handleChange(handleChangeType, event.target.value) }}
+            onChange={(event: any) => { this.handleSettingsChange("textFields", textFieldKey, event.target.value) }}
           />
       }
 
@@ -299,21 +328,30 @@ export class SettingsPage extends React.Component<{}, settingsState> {
         </Box>
       )
     }
+
     return textFields
   }
 
 
-  renderToggleableSetting(handleChangeType: string, value: boolean, description: string) {
-    return (
-      <Box style={{ marginTop: 10, marginBottom: 20, display: "flex", flexDirection: "row" }}>
-        <CheckBox
-          required={true}
-          checked={value}
-          onChange={(event: any) => { this.handleChange(handleChangeType, !value) }}
-        />
-        <Label required={true}>{description}</Label>
-      </Box>
-    )
+  renderToggleableSetting() {
+    let checkboxFields = []
+
+    for (const checkboxFieldKey of Object.keys(this.state.checkboxFields)) {
+      const checkBoxField = this.state.checkboxFields[checkboxFieldKey]
+
+      checkboxFields.push(
+        <Box style={{ marginTop: 10, marginBottom: 20, display: "flex", flexDirection: "row" }} key={checkboxFieldKey}>
+          <CheckBox
+            required={true}
+            checked={checkBoxField.value}
+            onChange={() => { this.handleSettingsChange("textField", checkboxFieldKey, !checkBoxField.value) }}
+          />
+          <Label required={true}>{checkBoxField.description}</Label>
+        </Box>
+      )
+    }
+
+    return checkboxFields
   }
 
   render() {
