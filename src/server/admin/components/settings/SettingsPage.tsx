@@ -110,14 +110,14 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
     let formData = new FormData();
 
-    // TODO for loop imageFields -> image.file
-    // formData.append("logoFile", this.state.logoFile)
-    // formData.append("headerFile", this.state.headerFile)
-    // formData.append("faviconFile", this.state.faviconFile)
     formData.append("imageFields", JSON.stringify(this.state.imageFields))
     formData.append("textFields", JSON.stringify(this.state.textFields))
     formData.append("checkboxFields", JSON.stringify(this.state.checkboxFields))
     formData.append("settingsId", this.state.settingsId)
+
+    for (const fileUploadKey of Object.keys(this.state.filesToUpload)) {
+      formData.append(fileUploadKey, this.state.filesToUpload[fileUploadKey])
+    }
 
     await axios.post("/api/settings", formData, { headers: { "Content-Type": "multipart/form-data"}})
       .then((response) => {

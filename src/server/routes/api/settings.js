@@ -1,23 +1,16 @@
 "use strict"
 const SiteConfigModel = require("../../models/SiteConfig")
 const express = require("express")
-const { cloudinary } = require("../../utils/cloudinary")
+const { cloudinary, getCloudinaryOptions } = require("../../utils/cloudinary")
 const { getDefaultSettings } = require("../../utils/utilities")
 const { isAuthenticatedAndAdmin } = require("./middleware")
 const formidable = require("formidable")
 let router = express.Router()
 
-const uploadSettingsImage = async (uploadImage, uploadOptions) => {
-  const uploadedResponse = await cloudinary.uploader.upload(
-    uploadImage.path,
-    uploadOptions
-  )
-  return uploadedResponse.secure_url
-}
-
 router
   .route("/")
   .get(isAuthenticatedAndAdmin, async (req, res) => {
+    // return settings if user is an authenticated admin, filter out unecessary fields
     const settings = await SiteConfigModel.findOne().select(
       "-__v -createdAt -updatedAt -_immutable"
     )
@@ -29,40 +22,43 @@ router
       let textFields = JSON.parse(fields.textFields)
       let checkboxFields = JSON.parse(fields.checkboxFields)
 
-/*       for (const fileType of Object.keys(files)) {
-        switch (fileType) {
-          case "headerFile":
-            settings.headerUrl = await uploadSettingsImage(files[fileType], {
-              public_id: `${process.env.CLOUDINARY_FOLDER}/static/${fileType}`,
-            })
-            break
-          case "logoFile":
-            settings.iconUrl = await uploadSettingsImage(files[fileType], {
-              crop: "fill",
-              width: 256,
-              height: 256,
-              public_id: `${process.env.CLOUDINARY_FOLDER}/static/${fileType}`,
-            })
-            break
-          case "faviconFile":
-            settings.faviconUrl = await uploadSettingsImage(files[fileType], {
-              crop: "fill",
-              width: 256,
-              height: 256,
-              public_id: `${process.env.CLOUDINARY_FOLDER}/settings/${fileType}`,
-            })
-            break
-        }
-      } */
+      // Iterate through files and process each file depending on the field type
+      for (const fileUploadKey of Object.keys(files)) {
+        // __ used as delimiter here in key for formData file, e.g. imageFields__websiteLogo
+        const [settingCategory, settingField] = fileUploadKey.split("__")
 
+        try {
+          switch (settingCategory) {
+            case "imageFields":
+              imageFields[settingField].url = await cloudinary.uploader.upload(
+                files[fileUploadKey].path,
+                getCloudinaryOptions(settingField)
+              ).secure_url
+              break
+
+            case "fileFields":
+              console.log("fileFields upload: TODO")
+              break
+          }
+        } catch (err) {
+          console.error(err)
+          return res
+            .status(400)
+            .send(
+              `Failed to upload/process file for setting: ${settingCategory} -> ${settingField}`
+            )
+        }
+      }
+
+      const select = { _id: fields.settingsId }
+      const update = { imageFields, textFields, checkboxFields }
+      const options = { returnOriginal: false }
+
+      // Update settings and respond with newly updated settings (including image/file upload URLs)
       await SiteConfigModel.findOneAndUpdate(
-        { _id: fields.settingsId },
-        {
-          imageFields,
-          textFields,
-          checkboxFields,
-        },
-        { returnOriginal: false },
+        select,
+        update,
+        options,
         (err, settings) => {
           if (err) {
             res.status(400).send("Could not find settings with the given id")
@@ -74,6 +70,7 @@ router
     })
   })
   .delete(isAuthenticatedAndAdmin, async (req, res) => {
+    // SiteConfig only has one row, get it, delete it and create a new row using default values
     await SiteConfigModel.deleteOne({})
     const settings = await SiteConfigModel.create(getDefaultSettings())
     res.json(settings)
