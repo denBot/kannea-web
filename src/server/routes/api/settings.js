@@ -25,9 +25,11 @@ router
   })
   .post(isAuthenticatedAndAdmin, async (req, res) => {
     new formidable.IncomingForm().parse(req, async (err, fields, files) => {
-      let settings = JSON.parse(fields.settings)
+      let imageFields = JSON.parse(fields.imageFields)
+      let textFields = JSON.parse(fields.textFields)
+      let checkboxFields = JSON.parse(fields.checkboxFields)
 
-      for (const fileType of Object.keys(files)) {
+/*       for (const fileType of Object.keys(files)) {
         switch (fileType) {
           case "headerFile":
             settings.headerUrl = await uploadSettingsImage(files[fileType], {
@@ -51,11 +53,15 @@ router
             })
             break
         }
-      }
+      } */
 
       await SiteConfigModel.findOneAndUpdate(
-        { _id: settings._id },
-        settings,
+        { _id: fields.settingsId },
+        {
+          imageFields,
+          textFields,
+          checkboxFields,
+        },
         { returnOriginal: false },
         (err, settings) => {
           if (err) {

@@ -10,6 +10,7 @@ type settingsState = {
   imageFields: any,
   textFields: any,
   checkboxFields: any,
+  settingsId: any,
 
   isLoading: boolean,
   isLoadingMessage: string,
@@ -33,6 +34,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
       imageFields: null,
       textFields: null,
       checkboxFields: null,
+      settingsId: null,
 
       filesToUpload: [],
 
@@ -55,6 +57,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           imageFields: response.data.imageFields,
           textFields: response.data.textFields,
           checkboxFields: response.data.checkboxFields,
+          settingsId: response.data._id,
           isLoading: false
         })
         console.log("got settings:", this.state)
@@ -77,6 +80,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
             imageFields: response.data.imageFields,
             textFields: response.data.textFields,
             checkboxFields: response.data.checkboxFields,
+            settingsId: response.data._id,
             responseMessage: {
               content: "Settings have been reset to default.",
               type: "success",
@@ -113,6 +117,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     formData.append("imageFields", JSON.stringify(this.state.imageFields))
     formData.append("textFields", JSON.stringify(this.state.textFields))
     formData.append("checkboxFields", JSON.stringify(this.state.checkboxFields))
+    formData.append("settingsId", this.state.settingsId)
 
     await axios.post("/api/settings", formData, { headers: { "Content-Type": "multipart/form-data"}})
       .then((response) => {
@@ -125,6 +130,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           imageFields: response.data.imageFields,
           textFields: response.data.textFields,
           checkboxFields: response.data.checkboxFields,
+          settingsId: response.data._id,
         })
       }).catch(err => {
         this.setState({
@@ -184,51 +190,31 @@ export class SettingsPage extends React.Component<{}, settingsState> {
     return expression.test(String(email).toLowerCase())
   }
 
-  handleSettingsChange (fieldType: string, key: string, value: any) {
-    switch (fieldType) {
-      case "textFields":
-        this.state.textFields[key].value = value
-        this.setState({
-          textFields: this.state.textFields
-        })
-        break
-      case "fileUpload":
-        this.state.filesToUpload[key] = value
-        this.setState({
-          filesToUpload: this.state.filesToUpload
-        })
-        break
-      case "checkboxFields":
-        this.state.checkboxFields[key].value = value
-        this.setState({
-          checkboxFields: this.state.checkboxFields
-        })
+  handleSettingsChange (fieldType: string, key: string, value: any, isFile: boolean = false) {
+
+    if (isFile) {
+      this.state.filesToUpload[`${fieldType}__${key}`] = value
+      this.setState({
+        filesToUpload: this.state.filesToUpload
+      })
+    } else {
+      switch (fieldType) {
+        case "textFields":
+          this.state.textFields[key].value = value
+          this.setState({
+            textFields: this.state.textFields
+          })
+          break
+        case "checkboxFields":
+          this.state.checkboxFields[key].value = value
+          this.setState({
+            checkboxFields: this.state.checkboxFields
+          })
+      }
     }
+
+    console.log(this.state)
   }
-
-/*   handleImageLoading (e: any, imageUrl: string, isLoaded: boolean) {
-    e.target.style.display = (isLoaded) ? "block" : "none"
-
-    switch (imageUrl) {
-      case "faviconUrl":
-        this.setState({ faviconIsLoaded: isLoaded }); break
-      case "logoUrl":
-        this.setState({ logoIsLoaded: isLoaded }); break
-      case "headerUrl":
-        this.setState({ headerIsLoaded: isLoaded }); break
-    }
-  }
-
-  handleFileSelection(file: any, imageUrl: string) {
-    switch (imageUrl) {
-      case "faviconUrl":
-        this.setState({ faviconFile: file }); break
-      case "logoUrl":
-        this.setState({ logoFile: file }); break
-      case "headerUrl":
-        this.setState({ headerFile: file }); break
-    }
-  } */
 
   renderImageFields () {
     let imageFields = []
@@ -240,7 +226,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
         multiple={false}
         validate={{ mimeTypes: image.mimeTypes }}
         uploadLimitIn={'MB'}
-        onChange={(files) => { this.handleSettingsChange("fileUpload", imageFieldKey, files[0]) }}
+        onChange={(files) => { this.handleSettingsChange("imageFields", imageFieldKey, files[0], true) }}
       />
 
       switch (image.previewType) {
@@ -331,7 +317,6 @@ export class SettingsPage extends React.Component<{}, settingsState> {
 
     return textFields
   }
-
 
   renderCheckboxFields() {
     let checkboxFields = []
