@@ -21,6 +21,11 @@ const getCloudinaryOptions = (imageType) => {
         height: 250,
         public_id: `${process.env.CLOUDINARY_FOLDER}/static/${imageType}`,
       }
+    case "homepageBanner":
+      return {
+        height: 1080,
+        public_id: `${process.env.CLOUDINARY_FOLDER}/static/${imageType}`,
+      }
     default:
       return {
         public_id: `${process.env.CLOUDINARY_FOLDER}/static/${imageType}`,

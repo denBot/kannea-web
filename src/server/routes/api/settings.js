@@ -35,15 +35,13 @@ router
         // __ used as delimiter here in key for formData file, e.g. imageFields__websiteLogo
         const [settingCategory, settingField] = fileUploadKey.split("__")
 
-        let uploadedResponse = null
         try {
           switch (settingCategory) {
             case "imageFields":
-              uploadedResponse = await uploadSettingsImage(
+              imageFields[settingField].url = await uploadSettingsImage(
                 files[fileUploadKey],
                 getCloudinaryOptions(settingField)
               )
-              imageFields[settingField].url = uploadedResponse.secure_url
               break
 
             case "fileFields":

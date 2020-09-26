@@ -93,7 +93,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           this.setState({
             responseMessage: {
               content: "Settings could not be reset... Check console for details.",
-              type: "error",
+              type: "danger",
             },
             isLoading: false
           })
@@ -137,7 +137,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           isLoading: false,
           responseMessage: {
             content: "Could not save settings... See console for details.",
-            type: "error",
+            type: "danger",
           },
         })
         console.error(err)
