@@ -333,7 +333,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
   }
 
 
-  renderToggleableSetting() {
+  renderCheckboxFields() {
     let checkboxFields = []
 
     for (const checkboxFieldKey of Object.keys(this.state.checkboxFields)) {
@@ -344,7 +344,7 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           <CheckBox
             required={true}
             checked={checkBoxField.value}
-            onChange={() => { this.handleSettingsChange("textField", checkboxFieldKey, !checkBoxField.value) }}
+            onChange={() => { this.handleSettingsChange("checkboxFields", checkboxFieldKey, !checkBoxField.value) }}
           />
           <Label required={true}>{checkBoxField.description}</Label>
         </Box>
@@ -386,21 +386,18 @@ export class SettingsPage extends React.Component<{}, settingsState> {
           <section>
             <H4 style={{ marginTop: 40, marginBottom: 20 }}>Editable Settings</H4>
             { this.renderTextFields() }
-
             <div id="editor"></div>
           </section>
           )}
 
-          {/**
-          <section>
-            <H4 style={{marginTop: 30, marginBottom: 20}}>Toggleable Settings</H4>
-            {this.renderToggleableSetting("closeComments", this.state.settings.closeComments, "Disable visitor commenting on all pages") }
-            {this.renderToggleableSetting("hideComments", this.state.settings.closeComments, "Hide comments on all pages")}
-            {this.renderToggleableSetting("hideDescription", this.state.settings.closeComments, "Hide description on homepage")}
-          </section>
-          */}
+          {this.state.checkboxFields && (
+            <section>
+              <H4 style={{ marginTop: 40, marginBottom: 20 }}>Toggleable Settings</H4>
+              { this.renderCheckboxFields() }
+              <div id="editor"></div>
+            </section>
+          )}
 
-          {/** isLoadingMessage will be set to null if GET settings request is successful  */}
           <Box style={{display: "flex", justifyContent: "center", marginTop: 30}}>
             {this.state.isLoading && <Button variant="success" style={{ marginRight: 10 }}>{this.state.isLoadingMessage}</Button>}
             {!this.state.isLoading && <Button variant="primary" style={{ marginRight: 10 }} disabled={this.state.invalidInput} onClick={async () => {await this.saveSettings()}}>Save settings</Button>}
