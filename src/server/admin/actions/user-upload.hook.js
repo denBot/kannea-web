@@ -14,8 +14,8 @@ const after = async (response, request, context) => {
         uploadImage.path,
         {
           crop: "fill",
-          width: 200,
-          height: 200,
+          thumb: true,
+          gravity: "faces",
           public_id: `${process.env.CLOUDINARY_FOLDER}/avatars/${record.params["_id"]}`,
         }
       )
