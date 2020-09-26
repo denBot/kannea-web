@@ -7,6 +7,14 @@ const { isAuthenticatedAndAdmin } = require("./middleware")
 const formidable = require("formidable")
 let router = express.Router()
 
+const uploadSettingsImage = async (uploadImage, uploadOptions) => {
+  const uploadedResponse = await cloudinary.uploader.upload(
+    uploadImage.path,
+    uploadOptions
+  )
+  return uploadedResponse.secure_url
+}
+
 router
   .route("/")
   .get(isAuthenticatedAndAdmin, async (req, res) => {
@@ -27,13 +35,15 @@ router
         // __ used as delimiter here in key for formData file, e.g. imageFields__websiteLogo
         const [settingCategory, settingField] = fileUploadKey.split("__")
 
+        let uploadedResponse = null
         try {
           switch (settingCategory) {
             case "imageFields":
-              imageFields[settingField].url = await cloudinary.uploader.upload(
-                files[fileUploadKey].path,
+              uploadedResponse = await uploadSettingsImage(
+                files[fileUploadKey],
                 getCloudinaryOptions(settingField)
-              ).secure_url
+              )
+              imageFields[settingField].url = uploadedResponse.secure_url
               break
 
             case "fileFields":
