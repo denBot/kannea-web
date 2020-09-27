@@ -18,7 +18,10 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-
+.quicksand-font {
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 *,
 *::before,
 *::after {

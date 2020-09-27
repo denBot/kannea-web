@@ -1,26 +1,19 @@
 <template>
-  <div>
+  <div class="homepage">
     <div class="parallax" />
-    <div class="container">
-      <div class="page">
-        <h1 class="title">Kannea</h1>
-        <div class="links">
-          <a
-            href="/about"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="button--grey"
-          >
-            About
-          </a>
 
+    <div href="#" class="homepage-section">
+      <div class="top-container">
+        <h1 class="quicksand-font title">Kannea</h1>
+        <p class="quicksand-font description">Some descriptive text...</p>
+        <div class="links">
           <a
             href="/gallery"
             target="_blank"
             rel="noopener noreferrer"
             class="button--grey"
           >
-            Artwork
+            Gallery
           </a>
 
           <a
@@ -29,10 +22,27 @@
             rel="noopener noreferrer"
             class="button--grey"
           >
-            Blog
+            Posts
+          </a>
+
+          <a
+            href="/about"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button--grey"
+          >
+            About
           </a>
         </div>
       </div>
+    </div>
+
+    <div href="#about" class="homepage-section">
+      <h1 class="quicksand-font title">About</h1>
+    </div>
+
+    <div href="#contact" class="homepage-section homepage-contact">
+      <h1 class="quicksand-font title">Contact</h1>
     </div>
   </div>
 </template>
@@ -44,38 +54,53 @@ export default Vue.extend({})
 </script>
 
 <style lang="scss" scoped>
-.container {
-  margin: 0 auto;
-  min-height: 30vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  //height: 2000px;
+.homepage {
+  .homepage-section {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
 
-  .title {
-    font-family: "Quicksand", "Source Sans Pro", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-      sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
+    .title {
+      display: block;
+      font-weight: 300;
+      font-size: 6rem;
+      color: #35495e;
+      letter-spacing: 1px;
+    }
+
+    .description {
+      display: block;
+      font-weight: 300;
+      font-size: 1.5rem;
+      color: #535353;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .links {
+      padding-top: 15px;
+    }
   }
 
-  .links {
-    padding-top: 15px;
+  .top-container {
+    align-items: center;
+    padding-top: 3vh;
   }
-}
 
-.parallax {
-  background-image: url("https://cdn.wallpapersafari.com/55/87/TNKS3B.jpg");
-  min-height: 400px;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-bottom: 1px solid #242424;
+  .homepage-contact {
+    height: 82vh;
+  }
+
+  .parallax {
+    background-image: url("https://cdn.wallpapersafari.com/55/87/TNKS3B.jpg");
+    min-height: 400px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-bottom: 1px solid #242424;
+  }
 }
 </style>

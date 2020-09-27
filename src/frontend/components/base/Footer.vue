@@ -1,9 +1,9 @@
 <template>
-  <footer class="footer">
+  <footer class="footer top-border">
     <div class="content has-text-centered">
       <p>
-        <strong>Bulma</strong> by
-        <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is
+        <strong>Kannea</strong> by
+        <a href="https://github.com/denBot">denBot</a>. The source code is
         licensed
         <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The
         website content is licensed
@@ -12,3 +12,9 @@
     </div>
   </footer>
 </template>
+
+<style scoped>
+.top-border {
+  border-top: 1px solid rgba(24, 24, 24, 0.2);
+}
+</style>
