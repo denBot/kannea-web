@@ -38,10 +38,29 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build",
+    "@nuxtjs/fontawesome",
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: ["@nuxtjs/bulma"],
+
+  fontawesome: {
+    component: "Fa",
+    suffix: true,
+    icons: {
+      solid: ["faEnvelope"],
+      brands: [
+        "faFacebook",
+        "faTwitter",
+        "faDiscord",
+        "faGooglePlus",
+        "faInstagram",
+        "faSnapchat",
+        "faTumblr",
+        "faPinterest",
+      ],
+    },
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {

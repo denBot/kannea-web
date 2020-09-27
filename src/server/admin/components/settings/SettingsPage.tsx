@@ -3,9 +3,6 @@ import React from 'react'
 import axios from "axios"
 import Quill from 'quill';
 
-import _ from "lodash"
-import { text } from 'body-parser';
-
 type settingsState = {
   imageFields: any,
   textFields: any,

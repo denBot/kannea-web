@@ -1,24 +1,37 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="title">Kannea</h1>
-      <div class="links">
-        <a
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          About me
-        </a>
-        <a
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          Artwork
-        </a>
+  <div>
+    <div class="parallax" />
+    <div class="container">
+      <div class="page">
+        <h1 class="title">Kannea</h1>
+        <div class="links">
+          <a
+            href="/about"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button--grey"
+          >
+            About
+          </a>
+
+          <a
+            href="/gallery"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button--grey"
+          >
+            Artwork
+          </a>
+
+          <a
+            href="/posts"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button--grey"
+          >
+            Blog
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -33,11 +46,12 @@ export default Vue.extend({})
 <style lang="scss" scoped>
 .container {
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 30vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  //height: 2000px;
 
   .title {
     font-family: "Quicksand", "Source Sans Pro", -apple-system,
@@ -53,5 +67,15 @@ export default Vue.extend({})
   .links {
     padding-top: 15px;
   }
+}
+
+.parallax {
+  background-image: url("https://cdn.wallpapersafari.com/55/87/TNKS3B.jpg");
+  min-height: 400px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-bottom: 1px solid #242424;
 }
 </style>
