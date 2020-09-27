@@ -42,7 +42,11 @@
     </div>
 
     <div href="#contact" class="homepage-section homepage-contact">
+      <div style="flex-direction: row">
       <h1 class="quicksand-font title">Contact</h1>
+      <p class="quicksand-font sub-description">Some descriptive text...</p>
+      <ContactForm />
+      </div>
     </div>
   </div>
 </template>
@@ -77,6 +81,15 @@ export default Vue.extend({})
       color: #535353;
       letter-spacing: 1px;
       margin-bottom: 20px;
+    }
+
+    .sub-description {
+      display: block;
+      font-weight: 300;
+      font-size: 1.3rem;
+      color: #535353;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
     }
 
     .links {

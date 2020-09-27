@@ -48,7 +48,7 @@ export default {
     component: "Fa",
     suffix: true,
     icons: {
-      solid: ["faEnvelope"],
+      solid: ["faEnvelope", "faUser"],
       brands: [
         "faFacebook",
         "faTwitter",
