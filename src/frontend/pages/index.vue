@@ -43,9 +43,9 @@
 
     <div href="#contact" class="homepage-section homepage-contact">
       <div style="flex-direction: row">
-      <h1 class="quicksand-font title">Contact</h1>
-      <p class="quicksand-font sub-description">Some descriptive text...</p>
-      <ContactForm />
+        <h1 class="quicksand-font title">Contact</h1>
+        <p class="quicksand-font sub-description">Some descriptive text...</p>
+        <ContactForm />
       </div>
     </div>
   </div>
