@@ -139,6 +139,17 @@ const configSchema = new Schema(
           default: "Hide comments section on all posts.",
         },
       },
+      hideSocialMedia: {
+        value: {
+          type: Boolean,
+          required: true,
+          default: false,
+        },
+        description: {
+          type: String,
+          default: "Hide social media icons from appearing on the website.",
+        },
+      },
       removeWebsiteDescription: {
         value: {
           type: Boolean,
