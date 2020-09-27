@@ -31,9 +31,7 @@ const Utilities = {
       function (error, result) {
         if (!error && !result) {
           result = !result
-            ? new SiteConfigModel({
-                _immutable: true,
-              })
+            ? new SiteConfigModel(this.getDefaultSettings())
             : result
           result.save(function (error) {
             console.error(error)
