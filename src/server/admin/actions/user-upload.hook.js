@@ -35,7 +35,7 @@ const before = async (request, context) => {
       if (!avatarUrl && !avatar) {
         // If no URL or upload image is provided, get the default avatar from dicebear
         await context.record.update({
-          avatarUrl: `https://avatars.dicebear.com/api/identicon/${context.record.params["_id"]}.svg`,
+          avatarUrl: `https://avatars.dicebear.com/api/${process.env.DICEBEAR_DEFAULT_AVATAR_TYPE}/${context.record.params["_id"]}.svg`,
         })
       } else if (avatarUrl && !avatar && isImageUrl(avatarUrl)) {
         // If new URL but no upload image is provided, set avatar to URL
